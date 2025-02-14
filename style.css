@@ -1,0 +1,29 @@
+* {
+  box-sizing: content-box;
+  margin: 0;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("assets/img/background.webp");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#gameBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+h1 {
+  padding-bottom: 2rem;
+}
+
+canvas {
+  background-color: black;
+}
