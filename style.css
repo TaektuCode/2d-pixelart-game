@@ -22,8 +22,21 @@ body {
 
 h1 {
   padding-bottom: 2rem;
+  font-family: "OldLondon", serif;
+  font-size: 65px;
+  color: black;
 }
 
 canvas {
   background-color: black;
+}
+
+@font-face {
+  font-family: "OldLondon";
+  src: url("assets/fonts/OldLondon.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "OldLondonA";
+  src: url("assets/fonts/OldLondonAlternate.ttf") format("truetype");
 }
