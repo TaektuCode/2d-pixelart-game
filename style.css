@@ -25,7 +25,7 @@ body {
   align-items: center;
   justify-content: center;
 
-  width: 755px; /* Set width according to border image */
+  width: 760px; /* Set width according to border image */
   height: 530px; /* Set height according to border image */
   position: relative;
 }
