@@ -1,19 +1,52 @@
 export class GameObject {
   position = {
-    x: 0, // Standardwert
-    y: 0, // Standardwert
+    x: 0,
+    y: 1,
   };
   img;
   width;
   height;
-  speed = 0; // Standardwert
+  velocity = {
+    x: 0,
+    y: 0.5,
+  };
+  gravity;
 
-  constructor(x, y, img, width, height, speed) {
-    this.position.x = x;
-    this.position.y = y;
+  constructor(position, img, width, height, velocity, gravity) {
+    this.position.x = position.x;
+    this.position.y = position.y;
     this.img = img;
     this.width = width;
     this.height = height;
-    this.speed = speed;
+    this.velocity.x = velocity.x;
+    this.velocity.y = velocity.y;
+    this.gravity = gravity;
+  }
+
+  draw(context) {
+    // console.log(...); // Debug-Ausgaben gehören eher in update() oder temporär hierhin
+    context.fillStyle = "blue";
+    context.fillRect(this.position.x, this.position.y, this.width, this.height);
+  }
+
+  update() {
+    console.log("Canvas height:", canvas.height);
+    this.position.x += this.velocity.x;
+    this.velocity.y += this.gravity; // Gravitation in jedem Frame anwenden
+
+    // Kollisionserkennung mit dem unteren Rand
+    if (this.position.y + this.height >= canvas.height) {
+      this.position.y = canvas.height - this.height;
+      this.velocity.y = 0; // Stoppe die vertikale Bewegung
+    }
+  }
+
+  animate(context) {
+    console.log("Animate in GameObject wird aufgerufen für:", this);
+    requestAnimationFrame(() => {
+      this.update();
+      this.draw(context);
+      this.animate(context); // Rekursiver Aufruf mit Arrow-Funktion
+    });
   }
 }
