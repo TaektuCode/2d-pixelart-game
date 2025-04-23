@@ -1,12 +1,19 @@
 class Cloud extends GameObject {
   y = -50;
   width = 740;
-  height = 200;
+  height = 400;
 
-  constructor() {
+  constructor(imagePath, x) {
     super();
-    this.loadImage("assets/img/clouds/clouds2.png");
+    this.loadImage(imagePath);
 
-    this.x = -50 + Math.random() * 500;
+    this.x = x;
+    this.animate();
+  }
+
+  animate() {
+    setInterval(() => {
+      this.x -= 0.15;
+    }, 1000 / 60);
   }
 }
