@@ -21,12 +21,26 @@ class MainCharacter extends GameObject {
     "assets/img/character/jump/jump7.png",
   ];
 
+  IMAGES_DEAD = [
+    "assets/img/character/dead/death1.png",
+    "assets/img/character/dead/death2.png",
+    "assets/img/character/dead/death3.png",
+    "assets/img/character/dead/death4.png",
+    "assets/img/character/dead/death5.png",
+    "assets/img/character/dead/death6.png",
+    "assets/img/character/dead/death7.png",
+    "assets/img/character/dead/death8.png",
+    "assets/img/character/dead/death9.png",
+    "assets/img/character/dead/death10.png",
+  ];
+
   world;
   constructor() {
     super();
     this.loadImage("assets/img/character/walk/walk1.png");
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
+    this.loadImages(this.IMAGES_DEAD);
     this.applyGravity();
     this.animate();
 
@@ -58,7 +72,9 @@ class MainCharacter extends GameObject {
     }, 1000 / 60);
 
     setInterval(() => {
-      if (this.isAboveGround()) {
+      if (this.isDead()) {
+        this.playAnimation(this.IMAGES_DEAD);
+      } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {

@@ -10,6 +10,7 @@ class GameObject {
   otherDirection = false;
   imageCache = {};
   currentImage = 0;
+  hp = 100;
   offset = {
     top: 0,
     left: 0,
@@ -42,6 +43,17 @@ class GameObject {
       this.x + this.offset.left < go.x + go.width - go.offset.right &&
       this.y + this.offset.top < go.y + go.height - go.offset.bottom
     );
+  }
+
+  hit() {
+    this.hp -= 5;
+    if (this.hp <= 0) {
+      this.hp = 0;
+    }
+  }
+
+  isDead() {
+    return this.hp == 0;
   }
 
   /**
