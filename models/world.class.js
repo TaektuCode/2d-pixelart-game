@@ -12,10 +12,21 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
+    this.checkCollisions();
   }
 
   setWorld() {
     this.character.world = this;
+  }
+
+  checkCollisions() {
+    setInterval(() => {
+      this.level.enemies.forEach((enemy) => {
+        if (this.character.isColliding(enemy)) {
+          console.log("collison with Character", enemy);
+        }
+      });
+    }, 1000);
   }
 
   draw() {
@@ -48,22 +59,28 @@ class World {
   addToMap(go) {
     if (go.otherDirection) {
       this.ctx.save();
-      this.ctx.translate(go.x + go.width, go.y); // Verschiebe den Ursprung zum rechten Rand des Objekts
+      this.ctx.translate(go.x + go.width, go.y);
       this.ctx.scale(-1, 1);
-      this.ctx.drawImage(go.img, 0, 0, go.width, go.height); // Zeichne relativ zum neuen Ursprung (0, 0)
+      this.ctx.drawImage(go.img, 0, 0, go.width, go.height);
       // Zeichne das Kollisionsrechteck (gespiegelt)
-      this.drawCollisionBox({ x: 0, y: 0, width: go.width, height: go.height });
+      if (
+        go instanceof MainCharacter ||
+        go instanceof Enemy1 ||
+        go instanceof Endboss
+      ) {
+        go.drawCollisionBox(this.ctx); // Rufe die drawCollisionBox-Methode des Objekts auf
+      }
       this.ctx.restore();
     } else {
       this.ctx.drawImage(go.img, go.x, go.y, go.width, go.height);
       // Zeichne das Kollisionsrechteck (nicht gespiegelt)
-      this.drawCollisionBox(go);
+      if (
+        go instanceof MainCharacter ||
+        go instanceof Enemy1 ||
+        go instanceof Endboss
+      ) {
+        go.drawCollisionBox(this.ctx); // Rufe die drawCollisionBox-Methode des Objekts auf
+      }
     }
-  }
-
-  drawCollisionBox(go) {
-    this.ctx.strokeStyle = "red";
-    this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(go.x, go.y, go.width, go.height);
   }
 }

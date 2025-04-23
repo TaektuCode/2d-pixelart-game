@@ -17,6 +17,13 @@ class Endboss extends GameObject {
     this.loadImages(this.IMAGES_WALKING);
     this.x = 700;
     this.animate();
+
+    this.offset = {
+      top: 130, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
+      left: 185, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
+      right: 90, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
+      bottom: 90, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
+    };
   }
 
   animate() {

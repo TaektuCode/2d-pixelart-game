@@ -18,6 +18,13 @@ class Enemy1 extends GameObject {
     this.x = 200 + Math.random() * 500;
     this.speed = 0.15 + Math.random() * 0.5;
     this.animate();
+
+    this.offset = {
+      top: 50, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
+      left: 35, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
+      right: 10, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
+      bottom: 10, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
+    };
   }
 
   animate() {

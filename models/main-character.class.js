@@ -29,6 +29,13 @@ class MainCharacter extends GameObject {
     this.loadImages(this.IMAGES_JUMPING);
     this.applyGravity();
     this.animate();
+
+    this.offset = {
+      top: 75, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
+      left: 50, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
+      right: 110, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
+      bottom: 25, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
+    };
   }
 
   animate() {

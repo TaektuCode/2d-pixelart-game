@@ -10,6 +10,12 @@ class GameObject {
   otherDirection = false;
   imageCache = {};
   currentImage = 0;
+  offset = {
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  };
 
   applyGravity() {
     setInterval(() => {
@@ -29,8 +35,13 @@ class GameObject {
     this.img.src = path;
   }
 
-  draw(ctx) {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height); // Zeichne relativ zum neuen Ursprung (0, 0)
+  isColliding(go) {
+    return (
+      this.x + this.width - this.offset.right > go.x + go.offset.left &&
+      this.y + this.height - this.offset.bottom > go.y + go.offset.top &&
+      this.x + this.offset.left < go.x + go.width - go.offset.right &&
+      this.y + this.offset.top < go.y + go.height - go.offset.bottom
+    );
   }
 
   /**
@@ -63,5 +74,16 @@ class GameObject {
 
   jump() {
     this.speedY = 30;
+  }
+
+  drawCollisionBox(ctx) {
+    ctx.strokeStyle = "lime"; // Ändere die Farbe zur besseren Unterscheidung
+    ctx.lineWidth = 3;
+    ctx.strokeRect(
+      this.x + this.offset.left,
+      this.y + this.offset.top,
+      this.width - this.offset.left - this.offset.right,
+      this.height - this.offset.top - this.offset.bottom,
+    );
   }
 }
