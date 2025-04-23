@@ -1,9 +1,9 @@
 class GameObject {
+  img;
   x = 120;
   y = 250;
-  img;
-  width = 150;
-  height = 200;
+  width = 200;
+  height = 150;
 
   loadImage(path) {
     this.img = new Image();

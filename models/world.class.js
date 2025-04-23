@@ -1,6 +1,7 @@
 class World {
   character = new MainCharacter();
   enemies = [new Enemy1(), new Enemy1(), new Enemy1()];
+  clouds = [new Cloud()];
   canvas;
   ctx;
 
@@ -17,28 +18,36 @@ class World {
       this.character.img,
       this.character.x,
       this.character.y,
-      this.character.height,
       this.character.width,
+      this.character.height,
     );
 
     this.enemies.forEach((enemy) => {
-      this.ctx.save(); // Speichere den aktuellen Canvas-Zustand
+      this.ctx.save();
 
-      // Setze den Drehpunkt für die Spiegelung (Mittelpunkt der horizontalen Ausdehnung)
       const centerX = enemy.x + enemy.width / 2;
-      this.ctx.translate(centerX, 0); // Verschiebe den Ursprung zum Mittelpunkt
+      this.ctx.translate(centerX, 0);
       this.ctx.scale(-1, 1); // Spiegele horizontal
 
-      // Zeichne das Bild an der angepassten Position
       this.ctx.drawImage(
         enemy.img,
         -enemy.width / 2,
         enemy.y,
-        enemy.height,
         enemy.width,
+        enemy.height,
       );
 
       this.ctx.restore();
+    });
+
+    this.clouds.forEach((cloud) => {
+      this.ctx.drawImage(
+        cloud.img,
+        cloud.x,
+        cloud.y,
+        cloud.width,
+        cloud.height,
+      );
     });
 
     // draw() is called always
