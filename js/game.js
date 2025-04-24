@@ -11,6 +11,7 @@ function init() {
 
 //#region Keyboard Events+
 window.addEventListener("keydown", (e) => {
+  console.log("Keydown-Event:", e.key); // Füge diese Zeile hinzu
   if (e.key === "ArrowLeft") {
     keyboard.LEFT = true;
   } else if (e.key === "ArrowRight") {
@@ -20,12 +21,14 @@ window.addEventListener("keydown", (e) => {
   } else if (e.key === "ArrowDown") {
     keyboard.DOWN = true;
   } else if (e.key === " ") {
-    // Leertaste
     keyboard.SPACE = true;
+  } else if (e.key === "d") {
+    keyboard.D = true;
   }
 });
 
 window.addEventListener("keyup", (e) => {
+  console.log("Keyup-Event:", e.key); // Füge diese Zeile hinzu
   if (e.key === "ArrowLeft") {
     keyboard.LEFT = false;
   } else if (e.key === "ArrowRight") {
@@ -35,8 +38,9 @@ window.addEventListener("keyup", (e) => {
   } else if (e.key === "ArrowDown") {
     keyboard.DOWN = false;
   } else if (e.key === " ") {
-    // Leertaste
     keyboard.SPACE = false;
+  } else if (e.key === "d") {
+    keyboard.D = false;
   }
 });
 

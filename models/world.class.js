@@ -6,6 +6,8 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  throwableObjects = [new ThrowableObject()];
+  isThrowing = false;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -13,23 +15,48 @@ class World {
     this.keyboard = keyboard;
     this.draw();
     this.setWorld();
-    this.checkCollisions();
+    this.run();
   }
 
   setWorld() {
     this.character.world = this;
   }
 
-  checkCollisions() {
+  run() {
     setInterval(() => {
-      this.level.enemies.forEach((enemy) => {
-        if (this.character.isColliding(enemy)) {
-          this.character.hit();
-          this.statusBar.setPercentage(this.character.hp); // Aktualisiere die Statusbar
-          console.log("Energy is", this.character.hp);
-        }
-      });
+      this.checkCollisions();
+      this.checkThrowObjects();
     }, 200);
+  }
+
+  checkThrowObjects() {
+    if (this.keyboard.D && !this.isThrowing) {
+      this.isThrowing = true; // Setze die Flagge, um weitere Würfe zu blockieren
+
+      let stone = new ThrowableObject(
+        this.character.x + this.character.width / 2,
+        this.character.y + this.character.height / 2,
+      );
+      this.throwableObjects.push(stone);
+      stone.throw();
+
+      // Setze die Flagge nach einer kurzen Verzögerung zurück, um den nächsten Wurf zu ermöglichen
+      setTimeout(() => {
+        this.isThrowing = false;
+      }, 5000); // 5000 Millisekunden Verzögerung (anpassbar)
+    } else if (!this.keyboard.D) {
+      this.isThrowing = false;
+    }
+  }
+
+  checkCollisions() {
+    this.level.enemies.forEach((enemy) => {
+      if (this.character.isColliding(enemy)) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.hp); // Aktualisiere die Statusbar
+        console.log("Energy is", this.character.hp);
+      }
+    });
   }
 
   draw() {
@@ -43,6 +70,7 @@ class World {
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.throwableObjects);
 
     // 2. Zurücksetzen der Kameratransformation
     this.ctx.translate(-this.camera_x, 0);

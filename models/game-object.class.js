@@ -22,6 +22,9 @@ class GameObject extends DrawableObject {
   }
 
   isAboveGround() {
+    if (this instanceof ThrowableObject) {
+      return this.y < 500;
+    }
     return this.y < 325;
   }
 
