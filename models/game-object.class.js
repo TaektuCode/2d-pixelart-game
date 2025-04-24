@@ -1,16 +1,10 @@
-class GameObject {
-  img;
-  x = 120;
-  y = 325;
-  width = 200;
-  height = 150;
+class GameObject extends DrawableObject {
   speed = 0.15;
   speedY = 0;
   velocity = 1;
   otherDirection = false;
-  imageCache = {};
-  currentImage = 0;
   hp = 100;
+  lastHit = 0;
   offset = {
     top: 0,
     left: 0,
@@ -31,17 +25,28 @@ class GameObject {
     return this.y < 325;
   }
 
-  loadImage(path) {
-    this.img = new Image();
-    this.img.src = path;
-  }
-
   isColliding(go) {
+    let thisLeft = this.x + this.offset.left;
+    let thisRight = this.x + this.width - this.offset.right;
+    let thisTop = this.y + this.offset.top;
+    let thisBottom = this.y + this.height - this.offset.bottom;
+
+    let goLeft = go.x + go.offset.left;
+    let goRight = go.x + go.width - go.offset.right;
+    let goTop = go.y + go.offset.top;
+    let goBottom = go.y + go.height - go.offset.bottom;
+
+    if (this.otherDirection) {
+      let originalLeft = thisLeft;
+      thisLeft = thisRight;
+      thisRight = originalLeft;
+    }
+
     return (
-      this.x + this.width - this.offset.right > go.x + go.offset.left &&
-      this.y + this.height - this.offset.bottom > go.y + go.offset.top &&
-      this.x + this.offset.left < go.x + go.width - go.offset.right &&
-      this.y + this.offset.top < go.y + go.height - go.offset.bottom
+      thisRight > goLeft &&
+      thisBottom > goTop &&
+      thisLeft < goRight &&
+      thisTop < goBottom
     );
   }
 
@@ -49,24 +54,19 @@ class GameObject {
     this.hp -= 5;
     if (this.hp <= 0) {
       this.hp = 0;
+    } else {
+      this.lastHit = new Date().getTime();
     }
+  }
+
+  isHurt() {
+    let timepassed = new Date().getTime() - this.lastHit;
+    timepassed = timepassed / 1000;
+    return timepassed < 1;
   }
 
   isDead() {
     return this.hp == 0;
-  }
-
-  /**
-   *
-   * @param {Array} arr - ["img/image1.png", "img/image2.png" ...]
-   */
-
-  loadImages(arr) {
-    arr.forEach((path) => {
-      let img = new Image();
-      img.src = path;
-      this.imageCache[path] = img;
-    });
   }
 
   moveRight() {
@@ -78,7 +78,7 @@ class GameObject {
   }
 
   playAnimation(images) {
-    let i = this.currentImage % this.IMAGES_WALKING.length; // let i = 0 % 6
+    let i = this.currentImage % images.length; // let i = 0 % 6
     let path = images[i];
     this.img = this.imageCache[path];
     this.currentImage++;
@@ -89,12 +89,20 @@ class GameObject {
   }
 
   drawCollisionBox(ctx) {
-    ctx.strokeStyle = "lime"; // Ändere die Farbe zur besseren Unterscheidung
+    ctx.strokeStyle = "lime";
     ctx.lineWidth = 3;
+    let x = this.x + this.offset.left;
+    let width = this.width - this.offset.left - this.offset.right;
+
+    if (this.otherDirection) {
+      // Wenn nach links geschaut wird, müssen wir die x-Koordinate anpassen
+      x = this.x + this.offset.right; // Beginne vom linken Rand + dem ursprünglichen rechten Offset
+    }
+
     ctx.strokeRect(
-      this.x + this.offset.left,
+      x,
       this.y + this.offset.top,
-      this.width - this.offset.left - this.offset.right,
+      width,
       this.height - this.offset.top - this.offset.bottom,
     );
   }

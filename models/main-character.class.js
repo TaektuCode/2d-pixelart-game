@@ -34,6 +34,13 @@ class MainCharacter extends GameObject {
     "assets/img/character/dead/death10.png",
   ];
 
+  IMAGES_HURT = [
+    "assets/img/character/hurt/hurt1.png",
+    "assets/img/character/hurt/hurt2.png",
+    "assets/img/character/hurt/hurt3.png",
+    "assets/img/character/hurt/hurt4.png",
+  ];
+
   world;
   constructor() {
     super();
@@ -41,6 +48,7 @@ class MainCharacter extends GameObject {
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_JUMPING);
     this.loadImages(this.IMAGES_DEAD);
+    this.loadImages(this.IMAGES_HURT);
     this.applyGravity();
     this.animate();
 
@@ -74,6 +82,8 @@ class MainCharacter extends GameObject {
     setInterval(() => {
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
+      } else if (this.isHurt()) {
+        this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
