@@ -6,6 +6,7 @@ class World {
   keyboard;
   camera_x = 0;
   statusBar = new StatusBar();
+  collectableStatusBar = new StatusBarCollectables();
   throwableObjects = [new ThrowableObject()];
   isThrowing = false;
 
@@ -26,7 +27,9 @@ class World {
     setInterval(() => {
       this.checkCollisions();
       this.checkThrowObjects();
-    }, 200);
+      this.checkCollectables();
+      this.checkCollectableStones();
+    }, 100);
   }
 
   checkThrowObjects() {
@@ -59,6 +62,29 @@ class World {
     });
   }
 
+  checkCollectables() {
+    this.level.collectables.forEach((collectable, index) => {
+      if (this.character.isColliding(collectable)) {
+        console.log("Collectable eingesammelt!", collectable);
+        this.level.collectables.splice(index, 1);
+        // Hier Logik für das Sammeln hinzufügen
+      }
+    });
+  }
+
+  checkCollectableStones() {
+    this.level.collectableStone.forEach((collectable, index) => {
+      if (this.character.isColliding(collectable)) {
+        console.log("Collectable Stone eingesammelt!", collectable);
+        this.level.collectableStone.splice(index, 1);
+        this.collectableStatusBar.setCollectableCount(
+          this.collectableStatusBar.collectableCount + 1,
+        );
+        // Hier Logik für die zweite Art von Collectables (Steine)
+      }
+    });
+  }
+
   draw() {
     // clear Canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -79,6 +105,7 @@ class World {
 
     // 3. Zeichnen der Statusbar nach dem Zurücksetzen der Transformation
     this.addToMap(this.statusBar);
+    this.addToMap(this.collectableStatusBar);
 
     // Draw() is always running
     self = this;
