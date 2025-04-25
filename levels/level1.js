@@ -39,4 +39,19 @@ const level1 = new Level(
       340,
     ),
   ],
+  [
+    new CollectableObjects(200, 300),
+    new CollectableObjects(200 * 3, 300),
+    new CollectableObjects(200 * 4, 300),
+    new CollectableObjects(200 * 4.5, 300),
+    new CollectableObjects(200 * 7, 300),
+  ],
+  [
+    new CollectableStone(250, 350),
+    new CollectableStone(250 * 1.5, 350),
+    new CollectableStone(250 * 4, 350),
+    new CollectableStone(250 * 4.5, 350),
+    new CollectableStone(250 * 7, 350),
+    new CollectableStone(250 * 8, 350),
+  ],
 );

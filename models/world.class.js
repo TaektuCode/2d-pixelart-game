@@ -70,6 +70,8 @@ class World {
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
     this.addObjectsToMap(this.level.enemies);
+    this.addObjectsToMap(this.level.collectables);
+    this.addObjectsToMap(this.level.collectableStone);
     this.addObjectsToMap(this.throwableObjects);
 
     // 2. Zurücksetzen der Kameratransformation
@@ -97,7 +99,10 @@ class World {
       if (
         go instanceof MainCharacter ||
         go instanceof Enemy1 ||
-        go instanceof Endboss
+        go instanceof Endboss ||
+        go instanceof CollectableObjects ||
+        go instanceof CollectableStone ||
+        go instanceof ThrowableObject
       ) {
         go.drawCollisionBox(this.ctx); // Zeichne die Kollisionsbox separat
       }
