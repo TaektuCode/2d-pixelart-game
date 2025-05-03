@@ -30,6 +30,7 @@ class World {
       this.checkThrowObjects();
       this.checkCollectables();
       this.checkCollectableStones();
+      this.checkThrowableObjectCollisions();
     }, 100);
   }
 
@@ -54,13 +55,55 @@ class World {
   }
 
   checkCollisions() {
-    this.level.enemies.forEach((enemy) => {
+    this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.statusBar.setPercentage(this.character.hp); // Aktualisiere die Statusbar
-        console.log("Energy is", this.character.hp);
+        console.log(
+          "World - checkCollisions: isJumping:",
+          this.character.isJumping,
+          "speedY:",
+          this.character.speedY,
+          "y:",
+          this.character.y,
+        );
+        // Prüfe, ob der Charakter springt und sich im Abwärtstrend befindet oder landet
+        // und ob seine Füße über dem oberen Teil des Gegners sind
+        if (
+          this.character.isJumping &&
+          this.character.speedY <= 0 &&
+          this.character.y + this.character.height < enemy.y + 180
+        ) {
+          console.log("Gegner von oben besiegt!", enemy);
+          this.level.enemies.splice(index, 1);
+          this.character.speedY = -5; // Optional: Kleiner Rückstoß
+          this.character.isJumping = false; // Verschiebe das Zurücksetzen hierhin
+        } else {
+          // Normale Kollision
+          this.character.hit();
+          this.statusBar.setPercentage(this.character.hp);
+          console.log("Energy is", this.character.hp);
+        }
       }
     });
+  }
+
+  checkThrowableObjectCollisions() {
+    this.throwableObjects.forEach((throwableObject) => {
+      this.level.enemies.forEach((enemy, enemyIndex) => {
+        if (throwableObject.isColliding(enemy)) {
+          console.log("Throwable Object trifft Gegner!", enemy);
+          // Hier Logik, was passieren soll, wenn das Geschoss trifft
+          this.level.enemies.splice(enemyIndex, 1); // **Gegner entfernen**
+          this.removeThrowableObject(throwableObject); // Geschoss entfernen
+        }
+      });
+    });
+  }
+
+  removeThrowableObject(throwableObject) {
+    const index = this.throwableObjects.indexOf(throwableObject);
+    if (index > -1) {
+      this.throwableObjects.splice(index, 1);
+    }
   }
 
   checkCollectables() {

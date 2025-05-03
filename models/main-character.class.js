@@ -1,6 +1,7 @@
 class MainCharacter extends GameObject {
   y = 80;
-  speed = 10;
+  speed = 5.2;
+  isJumping = false;
 
   IMAGES_WALKING = [
     "assets/img/character/walk/walk1.png",
@@ -91,10 +92,17 @@ class MainCharacter extends GameObject {
           this.playAnimation(this.IMAGES_WALKING);
         }
       }
-    }, 50);
+    }, 130);
   }
 
   jump() {
-    this.speedY = 16.5;
+    this.speedY = 19.5;
+    this.isJumping = true;
+    console.log(
+      "MainCharacter - Jumping:",
+      this.isJumping,
+      "speedY:",
+      this.speedY,
+    );
   }
 }

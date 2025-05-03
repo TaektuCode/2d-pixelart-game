@@ -1,7 +1,7 @@
 class GameObject extends DrawableObject {
   speed = 0.15;
   speedY = 0;
-  velocity = 1;
+  velocity = 1.75;
   otherDirection = false;
   hp = 100;
   lastHit = 0;
@@ -17,8 +17,16 @@ class GameObject extends DrawableObject {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.velocity;
+        if (this instanceof MainCharacter) {
+          console.log(
+            "GameObject - applyGravity: speedY:",
+            this.speedY,
+            "y:",
+            this.y,
+          );
+        }
       }
-    }, 1000 / 25);
+    }, 1000 / 20);
   }
 
   isAboveGround() {
