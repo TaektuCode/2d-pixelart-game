@@ -17,7 +17,7 @@ class Endboss extends GameObject {
     this.loadImage("assets/img/endboss/walk/Walk1_flip.png");
     this.loadImages(this.IMAGES_WALKING);
     this.x = 700;
-    this.hp = 100;
+    this.hp = 90;
     this.animate();
 
     this.offset = {
