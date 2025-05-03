@@ -1,5 +1,6 @@
 const level1 = new Level(
-  [new Enemy1(), new Enemy1(), new Enemy1(), new Endboss()],
+  [new Endboss()],
+  [new Enemy1(), new Enemy1(), new Enemy1()],
   [
     new Cloud("assets/img/clouds/clouds2.png", 0),
     new Cloud("assets/img/clouds/clouds2.png", 720),

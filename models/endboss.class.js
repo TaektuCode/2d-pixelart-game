@@ -2,6 +2,7 @@ class Endboss extends GameObject {
   y = 200;
   width = 400;
   height = 350;
+
   IMAGES_WALKING = [
     "assets/img/endboss/walk/Walk1_flip.png",
     "assets/img/endboss/walk/Walk2_flip.png",
@@ -16,6 +17,7 @@ class Endboss extends GameObject {
     this.loadImage("assets/img/endboss/walk/Walk1_flip.png");
     this.loadImages(this.IMAGES_WALKING);
     this.x = 700;
+    this.hp = 100;
     this.animate();
 
     this.offset = {
@@ -30,5 +32,12 @@ class Endboss extends GameObject {
     setInterval(() => {
       this.playAnimation(this.IMAGES_WALKING);
     }, 200);
+  }
+
+  hit(damage) {
+    this.hp -= damage;
+    if (this.hp < 0) {
+      this.hp = 0;
+    }
   }
 }

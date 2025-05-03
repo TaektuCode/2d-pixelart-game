@@ -30,13 +30,14 @@ class World {
       this.checkThrowObjects();
       this.checkCollectables();
       this.checkCollectableStones();
-      this.checkThrowableObjectCollisions();
+      this.checkThrowableObjectCollisionsWithEnemies();
+      this.checkThrowableObjectCollisionWithEndboss();
     }, 100);
   }
 
   checkThrowObjects() {
     if (this.keyboard.D && !this.isThrowing) {
-      this.isThrowing = true; // Setze die Flagge, um weitere Würfe zu blockieren
+      this.isThrowing = true;
 
       let stone = new ThrowableObject(
         this.character.x + this.character.width / 2,
@@ -45,10 +46,9 @@ class World {
       this.throwableObjects.push(stone);
       stone.throw();
 
-      // Setze die Flagge nach einer kurzen Verzögerung zurück, um den nächsten Wurf zu ermöglichen
       setTimeout(() => {
         this.isThrowing = false;
-      }, 5000); // 5000 Millisekunden Verzögerung (anpassbar)
+      }, 5000);
     } else if (!this.keyboard.D) {
       this.isThrowing = false;
     }
@@ -57,45 +57,46 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy)) {
-        console.log(
-          "World - checkCollisions: isJumping:",
-          this.character.isJumping,
-          "speedY:",
-          this.character.speedY,
-          "y:",
-          this.character.y,
-        );
-        // Prüfe, ob der Charakter springt und sich im Abwärtstrend befindet oder landet
-        // und ob seine Füße über dem oberen Teil des Gegners sind
         if (
           this.character.isJumping &&
           this.character.speedY <= 0 &&
           this.character.y + this.character.height < enemy.y + 180
         ) {
-          console.log("Gegner von oben besiegt!", enemy);
           this.level.enemies.splice(index, 1);
-          this.character.speedY = -5; // Optional: Kleiner Rückstoß
-          this.character.isJumping = false; // Verschiebe das Zurücksetzen hierhin
+          this.character.speedY = -5;
+          this.character.isJumping = false;
         } else {
-          // Normale Kollision
           this.character.hit();
           this.statusBar.setPercentage(this.character.hp);
-          console.log("Energy is", this.character.hp);
         }
       }
     });
   }
 
-  checkThrowableObjectCollisions() {
+  checkThrowableObjectCollisionsWithEnemies() {
     this.throwableObjects.forEach((throwableObject) => {
       this.level.enemies.forEach((enemy, enemyIndex) => {
         if (throwableObject.isColliding(enemy)) {
-          console.log("Throwable Object trifft Gegner!", enemy);
-          // Hier Logik, was passieren soll, wenn das Geschoss trifft
-          this.level.enemies.splice(enemyIndex, 1); // **Gegner entfernen**
-          this.removeThrowableObject(throwableObject); // Geschoss entfernen
+          this.level.enemies.splice(enemyIndex, 1);
+          this.removeThrowableObject(throwableObject);
         }
       });
+    });
+  }
+
+  checkThrowableObjectCollisionWithEndboss() {
+    this.throwableObjects.forEach((throwableObject) => {
+      if (this.level.endboss && this.level.endboss.length > 0) {
+        const endboss = this.level.endboss[0]; // Gehe davon aus, dass es nur einen Endboss gibt
+        if (throwableObject.isColliding(endboss)) {
+          endboss.hit(30);
+          console.log("Endboss getroffen! Neue HP:", endboss.hp);
+          this.removeThrowableObject(throwableObject);
+          if (endboss.hp <= 0) {
+            this.level.endboss.splice(0, 1); // Entferne den Endboss aus seinem Array
+          }
+        }
+      }
     });
   }
 
@@ -109,10 +110,8 @@ class World {
   checkCollectables() {
     this.level.collectables.forEach((collectable, index) => {
       if (this.character.isColliding(collectable)) {
-        console.log("Coin eingesammelt!", collectable);
         this.level.collectables.splice(index, 1);
-        this.statusCoins.increaseCoinCount(); // Rufe die Methode auf, um den Zähler zu erhöhen
-        // Hier weitere Logik für das Sammeln von Coins (z.B. Punkte hinzufügen)
+        this.statusCoins.increaseCoinCount();
       }
     });
   }
@@ -120,40 +119,33 @@ class World {
   checkCollectableStones() {
     this.level.collectableStone.forEach((collectable, index) => {
       if (this.character.isColliding(collectable)) {
-        console.log("Collectable Stone eingesammelt!", collectable);
         this.level.collectableStone.splice(index, 1);
         this.collectableStatusBar.setCollectableCount(
           this.collectableStatusBar.collectableCount + 1,
         );
-        // Hier Logik für die zweite Art von Collectables (Steine)
       }
     });
   }
 
   draw() {
-    // clear Canvas
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    // 1. Anwenden der Kameratransformation
     this.ctx.translate(this.camera_x, 0);
 
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
+    this.addObjectsToMap(this.level.endboss);
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectables);
     this.addObjectsToMap(this.level.collectableStone);
     this.addObjectsToMap(this.throwableObjects);
 
-    // 2. Zurücksetzen der Kameratransformation
     this.ctx.translate(-this.camera_x, 0);
 
-    // 3. Zeichnen der Statusbar nach dem Zurücksetzen der Transformation
     this.addToMap(this.statusBar);
     this.addToMap(this.collectableStatusBar);
     this.addToMap(this.statusCoins);
 
-    // Draw() is always running
     self = this;
     requestAnimationFrame(function () {
       self.draw();
@@ -168,7 +160,7 @@ class World {
 
   addToMap(go) {
     if (go instanceof DrawableObject) {
-      go.draw(this.ctx); // Rufe die draw-Methode des DrawableObject auf
+      go.draw(this.ctx);
       if (
         go instanceof MainCharacter ||
         go instanceof Enemy1 ||
@@ -177,7 +169,7 @@ class World {
         go instanceof CollectableStone ||
         go instanceof ThrowableObject
       ) {
-        go.drawCollisionBox(this.ctx); // Zeichne die Kollisionsbox separat
+        go.drawCollisionBox(this.ctx);
       }
     }
   }

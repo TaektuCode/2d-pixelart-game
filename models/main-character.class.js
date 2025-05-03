@@ -98,11 +98,5 @@ class MainCharacter extends GameObject {
   jump() {
     this.speedY = 19.5;
     this.isJumping = true;
-    console.log(
-      "MainCharacter - Jumping:",
-      this.isJumping,
-      "speedY:",
-      this.speedY,
-    );
   }
 }
