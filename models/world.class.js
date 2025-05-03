@@ -7,6 +7,7 @@ class World {
   camera_x = 0;
   statusBar = new StatusBar();
   collectableStatusBar = new StatusBarCollectables();
+  statusCoins = new StatusCoins();
   throwableObjects = [new ThrowableObject()];
   isThrowing = false;
 
@@ -65,9 +66,10 @@ class World {
   checkCollectables() {
     this.level.collectables.forEach((collectable, index) => {
       if (this.character.isColliding(collectable)) {
-        console.log("Collectable eingesammelt!", collectable);
+        console.log("Coin eingesammelt!", collectable);
         this.level.collectables.splice(index, 1);
-        // Hier Logik für das Sammeln hinzufügen
+        this.statusCoins.increaseCoinCount(); // Rufe die Methode auf, um den Zähler zu erhöhen
+        // Hier weitere Logik für das Sammeln von Coins (z.B. Punkte hinzufügen)
       }
     });
   }
@@ -106,6 +108,7 @@ class World {
     // 3. Zeichnen der Statusbar nach dem Zurücksetzen der Transformation
     this.addToMap(this.statusBar);
     this.addToMap(this.collectableStatusBar);
+    this.addToMap(this.statusCoins);
 
     // Draw() is always running
     self = this;
