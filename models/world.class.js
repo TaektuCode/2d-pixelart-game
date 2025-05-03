@@ -98,14 +98,11 @@ class World {
   checkThrowableObjectCollisionWithEndboss() {
     this.throwableObjects.forEach((throwableObject) => {
       if (this.level.endboss && this.level.endboss.length > 0) {
-        const endboss = this.level.endboss[0]; // Gehe davon aus, dass es nur einen Endboss gibt
+        const endboss = this.level.endboss[0];
         if (throwableObject.isColliding(endboss)) {
           endboss.hit(30);
           console.log("Endboss getroffen! Neue HP:", endboss.hp);
           this.removeThrowableObject(throwableObject);
-          if (endboss.hp <= 0) {
-            this.level.endboss.splice(0, 1); // Entferne den Endboss aus seinem Array
-          }
         }
       }
     });
