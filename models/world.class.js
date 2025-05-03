@@ -27,6 +27,7 @@ class World {
   run() {
     setInterval(() => {
       this.checkCollisions();
+      this.checkCollisionWithEndboss();
       this.checkThrowObjects();
       this.checkCollectables();
       this.checkCollectableStones();
@@ -71,6 +72,16 @@ class World {
         }
       }
     });
+  }
+
+  checkCollisionWithEndboss() {
+    if (this.level.endboss && this.level.endboss.length > 0) {
+      const endboss = this.level.endboss[0];
+      if (this.character.isColliding(endboss)) {
+        this.character.hit();
+        this.statusBar.setPercentage(this.character.hp);
+      }
+    }
   }
 
   checkThrowableObjectCollisionsWithEnemies() {
