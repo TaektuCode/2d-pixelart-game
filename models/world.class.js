@@ -218,6 +218,7 @@ class World {
       if (
         go instanceof MainCharacter ||
         go instanceof Enemy1 ||
+        go instanceof Enemy2 ||
         go instanceof Endboss ||
         go instanceof CollectableObjects ||
         go instanceof CollectableStone ||
