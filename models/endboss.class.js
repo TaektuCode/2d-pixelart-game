@@ -8,7 +8,7 @@ class Endboss extends GameObject {
   lastHitTime = 0;
   hurtAnimationDuration = 500;
   toBeRemoved = false;
-  deathAnimationInterval; // Variable für das Todesanimations-Intervall
+  deathAnimationInterval;
   deathAnimationFrame = 0;
 
   IMAGES_WALKING = [
@@ -18,6 +18,13 @@ class Endboss extends GameObject {
     "assets/img/endboss/walk/Walk4_flip.png",
     "assets/img/endboss/walk/Walk5_flip.png",
     "assets/img/endboss/walk/Walk6_flip.png",
+  ];
+
+  IMAGES_ATTACK = [
+    "assets/img/endboss/attack/Attack1_flip.png",
+    "assets/img/endboss/attack/Attack2_flip.png",
+    "assets/img/endboss/attack/Attack3_flip.png",
+    "assets/img/endboss/attack/Attack4_flip.png",
   ];
 
   IMAGES_HURT = [
@@ -40,11 +47,12 @@ class Endboss extends GameObject {
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_HURT);
     this.loadImages(this.IMAGES_DEAD);
+    this.loadImages(this.IMAGES_ATTACK);
     this.x = 2550;
     this.hp = 90;
     this.speed = 0.45;
     this.animate(); // Für Walking und Hurt
-    this.startMovingLeft();
+    this.isMovingLeft = false;
 
     this.offset = {
       top: 130,
@@ -73,14 +81,20 @@ class Endboss extends GameObject {
     let i = 0;
     this.deathAnimationInterval = setInterval(() => {
       this.img = this.imageCache[this.IMAGES_DEAD[i % this.IMAGES_DEAD.length]];
+      console.log(
+        "animateDeath: i =",
+        i,
+        ", length =",
+        this.IMAGES_DEAD.length,
+      ); // Überprüfe das hier
       i++;
       if (i >= this.IMAGES_DEAD.length) {
         clearInterval(this.deathAnimationInterval);
-        this.toBeRemoved = true; // Entferne den Boss nach der Animation
+        this.toBeRemoved = true;
+        console.log("animateDeath: Intervall gestoppt!"); // Überprüfe das hier
       }
-    }, 215); // Langsamere Geschwindigkeit (500ms pro Frame)
+    }, 215);
   }
-
   startMovingLeft() {
     this.isMovingLeft = true;
     setInterval(() => {
@@ -104,7 +118,22 @@ class Endboss extends GameObject {
     this.isDead = true;
     this.isMovingLeft = false;
     this.isHitState = false;
+    console.log("Endboss ist gestorben! Starte animateDeath()"); // Überprüfe das hier
     this.animateDeath(); // Starte die separate Todesanimation
+  }
+
+  playAttackAnimation(callback) {
+    let i = 0;
+    const attackInterval = setInterval(() => {
+      this.playAnimation(this.IMAGES_ATTACK);
+      i++;
+      if (i >= this.IMAGES_ATTACK.length) {
+        clearInterval(attackInterval);
+        if (callback) {
+          callback(); // Rufe die Callback-Funktion auf, nachdem die Animation beendet ist
+        }
+      }
+    }, 200); // Geschwindigkeit der Attack-Animation
   }
 
   removeFromWorld() {

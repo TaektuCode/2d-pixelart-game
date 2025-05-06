@@ -10,6 +10,7 @@ class World {
   statusCoins = new StatusCoins();
   throwableObjects = [new ThrowableObject()];
   isThrowing = false;
+  endbossStatusBar = null;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
@@ -32,6 +33,7 @@ class World {
       this.checkCollectables();
       this.checkCollectableStones();
       this.checkThrowableObjectCollisionsWithEnemies();
+      this.checkEndbossActivation();
       this.checkThrowableObjectCollisionWithEndboss();
     }, 100);
   }
@@ -74,6 +76,33 @@ class World {
     });
   }
 
+  checkEndbossActivation() {
+    if (this.level.endboss && this.level.endboss.length > 0) {
+      const endboss = this.level.endboss[0];
+      const activationXPosition = 2000;
+
+      if (
+        this.character.x > activationXPosition &&
+        !endboss.isMovingLeft &&
+        !endboss.isDead &&
+        !endboss.hasAttacked
+      ) {
+        endboss.hasAttacked = true;
+        endboss.playAttackAnimation(() => {
+          endboss.isMovingLeft = true;
+          endboss.startMovingLeft();
+          console.log("Endboss aktiviert und greift an!");
+          this.createAndAddEndbossStatusBar(); // Rufe die neue Methode auf
+        });
+      }
+    }
+  }
+
+  createAndAddEndbossStatusBar() {
+    this.endbossStatusBar = new StatusBarEndboss(this.canvas.width); // Jetzt mit Canvas-Breite
+    this.addToMap(this.endbossStatusBar);
+  }
+
   checkCollisionWithEndboss() {
     if (this.level.endboss && this.level.endboss.length > 0) {
       const endboss = this.level.endboss[0];
@@ -103,6 +132,13 @@ class World {
           endboss.hit(30);
           console.log("Endboss getroffen! Neue HP:", endboss.hp);
           this.removeThrowableObject(throwableObject);
+          if (this.endbossStatusBar) {
+            this.endbossStatusBar.setPercentage(endboss.hp);
+          }
+          // Rufe die die()-Methode nur auf, wenn der Boss noch nicht tot ist
+          if (endboss.hp <= 0 && !endboss.isDead) {
+            endboss.die();
+          }
         }
       }
     });
@@ -142,7 +178,17 @@ class World {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addToMap(this.character);
     this.addObjectsToMap(this.level.clouds);
-    this.addObjectsToMap(this.level.endboss);
+    if (this.level.endboss && this.level.endboss.length > 0) {
+      this.addToMap(this.level.endboss[0]);
+
+      if (this.endbossStatusBar) {
+        // Berechne die x-Position für die obere rechte Ecke relativ zur Kamera
+        this.endbossStatusBar.x =
+          this.canvas.width - this.endbossStatusBar.width - 10 - this.camera_x; // 10 Pixel Abstand
+
+        this.addToMap(this.endbossStatusBar);
+      }
+    }
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectables);
     this.addObjectsToMap(this.level.collectableStone);
