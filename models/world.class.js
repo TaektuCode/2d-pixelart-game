@@ -65,7 +65,9 @@ class World {
         if (
           this.character.isJumping &&
           this.character.speedY <= 0 &&
-          this.character.y + this.character.height < enemy.y + 180
+          this.character.y + this.character.height <
+            enemy.y + enemy.height + 100 &&
+          this.character.y < 330
         ) {
           this.level.enemies.splice(index, 1);
           this.character.speedY = -5;
