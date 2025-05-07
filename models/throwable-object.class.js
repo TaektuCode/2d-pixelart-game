@@ -1,28 +1,48 @@
 class ThrowableObject extends GameObject {
-  constructor(x, y) {
-    // Übergabe von x und y beim Erstellen
-    super();
+  accelerationY = -1.5; // Schwerkraft für den Stein
+  isFalling = true;
+  throwInterval;
+  isRemoved = false;
+  startY; // Speichert den initialen Y-Wert
+
+  constructor(x, y, characterOtherDirection) {
+    super(x, y);
     this.loadImage("assets/img/character/attack/stone.png");
     this.x = x - 30;
     this.y = y;
+    this.startY = y; // Initialen Y-Wert speichern
     this.width = 60;
     this.height = 60;
-    this.speedY = 0; // Initial keine vertikale Geschwindigkeit
+    this.speedY = 20;
+    this.direction = characterOtherDirection ? -1 : 1;
 
-    this.offset = {
-      top: 15, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
-      left: 15, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
-      right: 15, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
-      bottom: 15, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
-    };
+    this.offset = { top: 15, left: 15, right: 15, bottom: 15 };
+
+    this.throw();
   }
 
   throw() {
-    // Die throw-Methode wird aufgerufen, wenn die Taste gedrückt wird
-    this.speedY = 15;
-    this.applyGravity();
-    setInterval(() => {
-      this.x += 5;
-    }, 25);
+    this.throwInterval = setInterval(() => {
+      this.x += 10 * this.direction;
+
+      if (this.isFalling) {
+        this.y -= this.speedY;
+        this.speedY += this.accelerationY;
+
+        // Prüfe, ob der Stein sich abwärts bewegt UND den Bodenlevel überschritten hat
+        if (this.speedY < -35 && this.y > 350) {
+          this.remove();
+        }
+      }
+    }, 50);
+  }
+
+  remove() {
+    this.isRemoved = true;
+    clearInterval(this.throwInterval);
+  }
+
+  isColliding(otherObject) {
+    return super.isColliding(otherObject);
   }
 }

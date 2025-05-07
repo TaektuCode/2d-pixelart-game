@@ -46,13 +46,14 @@ class World {
       let stone = new ThrowableObject(
         this.character.x + this.character.width / 2,
         this.character.y + this.character.height / 2,
+        this.character.otherDirection, // Übergabe der Blickrichtung des Charakters
       );
       this.throwableObjects.push(stone);
       stone.throw();
 
       setTimeout(() => {
         this.isThrowing = false;
-      }, 5000);
+      }, 500);
     } else if (!this.keyboard.D) {
       this.isThrowing = false;
     }
@@ -115,34 +116,48 @@ class World {
   }
 
   checkThrowableObjectCollisionsWithEnemies() {
-    this.throwableObjects.forEach((throwableObject) => {
-      this.level.enemies.forEach((enemy, enemyIndex) => {
-        if (throwableObject.isColliding(enemy)) {
-          this.level.enemies.splice(enemyIndex, 1);
-          this.removeThrowableObject(throwableObject);
-        }
-      });
+    this.throwableObjects.forEach((throwableObject, index) => {
+      if (!throwableObject.isRemoved) {
+        // Nur prüfen, wenn der Stein nicht entfernt wurde
+        this.level.enemies.forEach((enemy, enemyIndex) => {
+          if (throwableObject.isColliding(enemy)) {
+            this.level.enemies.splice(enemyIndex, 1);
+            throwableObject.remove(); // Entferne den Stein nach der Kollision
+          }
+        });
+      }
+      if (throwableObject.isRemoved) {
+        this.throwableObjects.splice(index, 1);
+      }
     });
+    // Filter entfernt die entfernten Objekte aus dem Array (sauberere Lösung)
+    this.throwableObjects = this.throwableObjects.filter(
+      (obj) => !obj.isRemoved,
+    );
   }
 
   checkThrowableObjectCollisionWithEndboss() {
     this.throwableObjects.forEach((throwableObject) => {
-      if (this.level.endboss && this.level.endboss.length > 0) {
-        const endboss = this.level.endboss[0];
-        if (throwableObject.isColliding(endboss)) {
-          endboss.hit(30);
-          console.log("Endboss getroffen! Neue HP:", endboss.hp);
-          this.removeThrowableObject(throwableObject);
-          if (this.endbossStatusBar) {
-            this.endbossStatusBar.setPercentage(endboss.hp);
-          }
-          // Rufe die die()-Methode nur auf, wenn der Boss noch nicht tot ist
-          if (endboss.hp <= 0 && !endboss.isDead) {
-            endboss.die();
+      if (!throwableObject.isRemoved) {
+        if (this.level.endboss && this.level.endboss.length > 0) {
+          const endboss = this.level.endboss[0];
+          if (throwableObject.isColliding(endboss)) {
+            endboss.hit(30);
+            console.log("Endboss getroffen! Neue HP:", endboss.hp);
+            throwableObject.remove(); // Entferne den Stein nach der Kollision
+            if (this.endbossStatusBar) {
+              this.endbossStatusBar.setPercentage(endboss.hp);
+            }
+            if (endboss.hp <= 0 && !endboss.isDead) {
+              endboss.die();
+            }
           }
         }
       }
     });
+    this.throwableObjects = this.throwableObjects.filter(
+      (obj) => !obj.isRemoved,
+    );
   }
 
   removeThrowableObject(throwableObject) {
@@ -193,7 +208,7 @@ class World {
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectables);
     this.addObjectsToMap(this.level.collectableStone);
-    this.addObjectsToMap(this.throwableObjects);
+    this.addObjectsToMap(this.throwableObjects.filter((obj) => !obj.isRemoved));
 
     this.ctx.translate(-this.camera_x, 0);
 
