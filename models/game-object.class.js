@@ -26,6 +26,10 @@ class GameObject extends DrawableObject {
           );
         }
       }
+      if (!this.isAboveGround() && this.speedY < 0) {
+        this.y = 330; // Setze die Y-Koordinate direkt auf die Bodenhöhe
+        this.speedY = 0; // Stoppe die Abwärtsbewegung
+      }
     }, 1000 / 20);
   }
 

@@ -1,7 +1,9 @@
 class MainCharacter extends GameObject {
-  y = 80;
+  y = 330;
   speed = 5.2;
   isJumping = false;
+  isDeadCharacter = false;
+  deathAnimationInterval;
 
   IMAGES_WALKING = [
     "assets/img/character/walk/walk1.png",
@@ -63,36 +65,62 @@ class MainCharacter extends GameObject {
 
   animate() {
     setInterval(() => {
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight();
-        this.otherDirection = false;
-      }
+      if (!this.isDeadCharacter) {
+        // Nur bewegen, wenn der Charakter nicht tot ist
+        if (
+          this.world.keyboard.RIGHT &&
+          this.x < this.world.level.level_end_x
+        ) {
+          this.moveRight();
+          this.otherDirection = false;
+        }
 
-      if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.otherDirection = true;
-      }
+        if (this.world.keyboard.LEFT && this.x > 0) {
+          this.moveLeft();
+          this.otherDirection = true;
+        }
 
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.jump();
-      }
+        if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+          this.jump();
+        }
 
-      this.world.camera_x = -this.x + 100;
+        this.world.camera_x = -this.x + 100;
+      }
     }, 1000 / 60);
 
     setInterval(() => {
       if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
+        this.playDeathAnimation(); // Rufe die spezielle Dead-Animation auf
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
+        // Wenn nicht in der Luft, nicht verletzt und nicht tot:
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
           this.playAnimation(this.IMAGES_WALKING);
+        } else {
+          // Wenn keine Bewegung, zeige das erste Walking-Bild
+          this.img = this.imageCache[this.IMAGES_WALKING[0]];
         }
       }
     }, 130);
+  }
+
+  playDeathAnimation() {
+    if (!this.isDeadCharacter) {
+      this.isDeadCharacter = true; // Setze den Todeszustand nur einmal
+      let i = 0;
+      this.deathAnimationInterval = setInterval(() => {
+        this.img = this.imageCache[this.IMAGES_DEAD[i]];
+        i++;
+        if (i >= this.IMAGES_DEAD.length) {
+          clearInterval(this.deathAnimationInterval);
+          // Optional: Hier das letzte Bild anzeigen lassen, falls gewünscht
+          // this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+        }
+      }, 130);
+    }
   }
 
   jump() {
