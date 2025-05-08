@@ -2,6 +2,7 @@ class Enemy1 extends GameObject {
   width = 150;
   height = 100;
   y = 368;
+  isDeadEnemy = false;
   IMAGES_WALKING = [
     "assets/img/enemy1/walk/Walk1_flip.png",
     "assets/img/enemy1/walk/Walk2_flip.png",
@@ -34,5 +35,17 @@ class Enemy1 extends GameObject {
     setInterval(() => {
       this.playAnimation(this.IMAGES_WALKING);
     }, 100);
+  }
+
+  hit() {
+    this.hp = 0; // Setze die HP sofort auf 0
+    if (!this.isDeadEnemy) {
+      AudioHub.playOneSound(AudioHub.ENEMY1DEAD);
+      this.isDeadEnemy = true;
+    }
+  }
+
+  isDead() {
+    return this.hp <= 0;
   }
 }

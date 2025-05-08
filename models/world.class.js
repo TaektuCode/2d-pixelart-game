@@ -69,6 +69,7 @@ class World {
             enemy.y + enemy.height + 100 &&
           this.character.y < 330
         ) {
+          enemy.hit(); // Rufe die hit()-Methode des Gegners auf
           this.level.enemies.splice(index, 1);
           this.character.speedY = -5;
           this.character.isJumping = false;

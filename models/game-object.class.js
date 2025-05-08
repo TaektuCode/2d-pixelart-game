@@ -17,14 +17,14 @@ class GameObject extends DrawableObject {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.velocity;
-        if (this instanceof MainCharacter) {
-          console.log(
-            "GameObject - applyGravity: speedY:",
-            this.speedY,
-            "y:",
-            this.y,
-          );
-        }
+        // if (this instanceof MainCharacter) {
+        //   console.log(
+        //     "GameObject - applyGravity: speedY:",
+        //     this.speedY,
+        //     "y:",
+        //     this.y,
+        //   );
+        // }
       }
       if (!this.isAboveGround() && this.speedY < 0) {
         this.y = 330; // Setze die Y-Koordinate direkt auf die Bodenhöhe

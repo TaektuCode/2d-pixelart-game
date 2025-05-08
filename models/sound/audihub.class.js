@@ -7,7 +7,18 @@ class AudioHub {
 
   static COLLECTSTONE = new Audio("assets/audio/collectStone.wav");
 
-  static allSounds = [AudioHub.CHARACTERWALK];
+  static ENEMY1DEAD = new Audio("assets/audio/enemy1Dead.wav");
+
+  static ENEMY2DEAD = new Audio("assets/audio/enemy2Dead.wav");
+
+  static allSounds = [
+    AudioHub.CHARACTERWALK,
+    AudioHub.CHARACTERJUMP,
+    AudioHub.COLLECTCOIN,
+    AudioHub.COLLECTSTONE,
+    AudioHub.ENEMY1DEAD,
+    AudioHub.ENEMY2DEAD,
+  ];
 
   static playOneSound(sound) {
     const soundOn = localStorage.getItem("musicOn") === "true";
