@@ -185,6 +185,7 @@ class World {
         this.collectableStatusBar.setCollectableCount(
           this.collectableStatusBar.collectableCount + 1,
         );
+        AudioHub.playOneSound(AudioHub.COLLECTSTONE);
       }
     });
   }

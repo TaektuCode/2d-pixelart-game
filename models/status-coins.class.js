@@ -13,6 +13,7 @@ class StatusCoins extends DrawableObject {
 
   increaseCoinCount() {
     this.collectedCoins++;
+    AudioHub.playOneSound(AudioHub.COLLECTCOIN);
   }
 
   draw(ctx) {

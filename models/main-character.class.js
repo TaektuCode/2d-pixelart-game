@@ -154,5 +154,6 @@ class MainCharacter extends GameObject {
   jump() {
     this.speedY = 19.5;
     this.isJumping = true;
+    AudioHub.playOneSound(AudioHub.CHARACTERJUMP);
   }
 }
