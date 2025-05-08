@@ -40,7 +40,7 @@ class World {
   }
 
   checkThrowObjects() {
-    if (this.keyboard.D && !this.isThrowing) {
+    if (this.keyboard.D && !this.isThrowing && this.character.stones > 0) {
       this.isThrowing = true;
 
       let stone = new ThrowableObject(
@@ -50,7 +50,12 @@ class World {
       );
       this.throwableObjects.push(stone);
       stone.throw();
-
+      this.character.stones--;
+      console.log(
+        "Stein geworfen. Verbleibende Anzahl:",
+        this.character.stones,
+      ); // Optional zur Überprüfung
+      this.collectableStatusBar.setCollectableCount(this.character.stones);
       setTimeout(() => {
         this.isThrowing = false;
       }, 500);
@@ -69,7 +74,7 @@ class World {
             enemy.y + enemy.height + 100 &&
           this.character.y < 330
         ) {
-          enemy.hit(); // Rufe die hit()-Methode des Gegners auf
+          enemy.hit();
           this.level.enemies.splice(index, 1);
           this.character.speedY = -5;
           this.character.isJumping = false;
@@ -187,7 +192,12 @@ class World {
         this.collectableStatusBar.setCollectableCount(
           this.collectableStatusBar.collectableCount + 1,
         );
+        this.character.stones++; // Erhöhe die Anzahl der Steine des Charakters
         AudioHub.playOneSound(AudioHub.COLLECTSTONE);
+        console.log(
+          "Stein eingesammelt. Aktuelle Anzahl:",
+          this.character.stones,
+        ); // Optional zur Überprüfung
       }
     });
   }

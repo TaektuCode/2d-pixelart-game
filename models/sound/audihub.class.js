@@ -3,6 +3,8 @@ class AudioHub {
 
   static CHARACTERJUMP = new Audio("assets/audio/charJump.wav");
 
+  static CHARACTERHURT = new Audio("assets/audio/charHurt.wav");
+
   static THROWSTONE = new Audio("assets/audio/throwStone.wav");
 
   static COLLECTCOIN = new Audio("assets/audio/collectCoin.wav");

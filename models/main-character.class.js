@@ -1,6 +1,8 @@
 class MainCharacter extends GameObject {
   y = 330;
   speed = 5.2;
+  stones = 0;
+  hitByEnemyCooldown = 1000;
   isJumping = false;
   isDeadCharacter = false;
   deathAnimationInterval;
@@ -155,5 +157,17 @@ class MainCharacter extends GameObject {
     this.speedY = 19.5;
     this.isJumping = true;
     AudioHub.playOneSound(AudioHub.CHARACTERJUMP);
+  }
+
+  hit() {
+    const currentTime = Date.now();
+    if (currentTime - this.lastHit > this.hitByEnemyCooldown) {
+      this.hp -= 5;
+      this.lastHit = currentTime;
+      AudioHub.playOneSound(AudioHub.CHARACTERHURT);
+      if (this.hp <= 0) {
+        this.hp = 0;
+      }
+    }
   }
 }
