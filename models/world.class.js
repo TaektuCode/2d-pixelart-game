@@ -92,6 +92,7 @@ class World {
         !endboss.isDead &&
         !endboss.hasAttacked
       ) {
+        AudioHub.playOneSound(AudioHub.ENDBOSS_ACTIVATION); // Spiele den Aktivierungs-Sound ab
         endboss.hasAttacked = true;
         endboss.playAttackAnimation(() => {
           endboss.isMovingLeft = true;

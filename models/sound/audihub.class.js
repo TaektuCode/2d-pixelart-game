@@ -13,6 +13,14 @@ class AudioHub {
 
   static ENEMY2DEAD = new Audio("assets/audio/enemy2Dead.wav");
 
+  static ENDBOSS_ACTIVATION = new Audio("assets/audio/endbossContact.wav");
+
+  static ENDBOSS_STEP = new Audio("assets/audio/endbossStep.wav");
+
+  static ENDBOSS_HURT = new Audio("assets/audio/endbossHurt.wav");
+
+  static ENDBOSS_DEATH = new Audio("assets/audio/endbossDeath.wav");
+
   static allSounds = [
     AudioHub.CHARACTERWALK,
     AudioHub.CHARACTERJUMP,
@@ -21,6 +29,9 @@ class AudioHub {
     AudioHub.ENEMY1DEAD,
     AudioHub.ENEMY2DEAD,
     AudioHub.THROWSTONE,
+    AudioHub.ENDBOSS_ACTIVATION,
+    AudioHub.ENDBOSS_STEP,
+    AudioHub.ENDBOSS_DEATH,
   ];
 
   static playOneSound(sound) {

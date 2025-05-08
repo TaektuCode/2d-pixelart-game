@@ -10,6 +10,8 @@ class Endboss extends GameObject {
   toBeRemoved = false;
   deathAnimationInterval;
   deathAnimationFrame = 0;
+  stepSoundDelay = 500; // Verzögerung in Millisekunden (anpassen)
+  lastStepSoundTime = 0;
 
   IMAGES_WALKING = [
     "assets/img/endboss/walk/Walk1_flip.png",
@@ -95,11 +97,17 @@ class Endboss extends GameObject {
       }
     }, 215);
   }
+
   startMovingLeft() {
     this.isMovingLeft = true;
     setInterval(() => {
       if (this.isMovingLeft) {
         this.moveLeft();
+        const currentTime = Date.now();
+        if (currentTime - this.lastStepSoundTime > this.stepSoundDelay) {
+          AudioHub.playOneSound(AudioHub.ENDBOSS_STEP);
+          this.lastStepSoundTime = currentTime;
+        }
       }
     }, 1000 / 60);
   }
@@ -107,6 +115,7 @@ class Endboss extends GameObject {
   hit(damage) {
     this.hp -= damage;
     this.isHitState = true;
+    AudioHub.playOneSound(AudioHub.ENDBOSS_HURT);
     this.isMovingLeft = false;
     this.lastHitTime = Date.now();
     if (this.hp <= 0 && !this.isDead) {
@@ -116,6 +125,7 @@ class Endboss extends GameObject {
 
   die() {
     this.isDead = true;
+    AudioHub.playOneSound(AudioHub.ENDBOSS_DEATH);
     this.isMovingLeft = false;
     this.isHitState = false;
     console.log("Endboss ist gestorben! Starte animateDeath()"); // Überprüfe das hier
