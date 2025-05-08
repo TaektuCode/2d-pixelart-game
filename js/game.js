@@ -5,6 +5,7 @@ let screenManager;
 let level1;
 
 function init() {
+  localStorage.setItem("musicOn", "true");
   canvas = document.getElementById("canvas");
   screenManager = new ScreenManager(canvas, startGame); // Übergib startGame als Callback
   screenManager.showStartScreen();

@@ -4,6 +4,8 @@ class MainCharacter extends GameObject {
   isJumping = false;
   isDeadCharacter = false;
   deathAnimationInterval;
+  walkSoundDelay = 330; // Verzögerung in Millisekunden (anpassen)
+  lastWalkSoundTime = 0;
 
   IMAGES_WALKING = [
     "assets/img/character/walk/walk1.png",
@@ -121,6 +123,32 @@ class MainCharacter extends GameObject {
         }
       }, 130);
     }
+  }
+
+  moveLeft() {
+    this.x -= this.speed;
+    const currentTime = Date.now();
+    if (
+      currentTime - this.lastWalkSoundTime > this.walkSoundDelay &&
+      !this.isAboveGround()
+    ) {
+      AudioHub.playOneSound(AudioHub.CHARACTERWALK);
+      this.lastWalkSoundTime = currentTime;
+    }
+    this.otherDirection = true;
+  }
+
+  moveRight() {
+    this.x += this.speed;
+    const currentTime = Date.now();
+    if (
+      currentTime - this.lastWalkSoundTime > this.walkSoundDelay &&
+      !this.isAboveGround()
+    ) {
+      AudioHub.playOneSound(AudioHub.CHARACTERWALK);
+      this.lastWalkSoundTime = currentTime;
+    }
+    this.otherDirection = false;
   }
 
   jump() {
