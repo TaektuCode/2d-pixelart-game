@@ -22,6 +22,7 @@ class ThrowableObject extends GameObject {
   }
 
   throw() {
+    AudioHub.playOneSound(AudioHub.THROWSTONE);
     this.throwInterval = setInterval(() => {
       this.x += 10 * this.direction;
 

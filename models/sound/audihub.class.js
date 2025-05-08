@@ -3,6 +3,8 @@ class AudioHub {
 
   static CHARACTERJUMP = new Audio("assets/audio/charJump.wav");
 
+  static THROWSTONE = new Audio("assets/audio/throwStone.wav");
+
   static COLLECTCOIN = new Audio("assets/audio/collectCoin.wav");
 
   static COLLECTSTONE = new Audio("assets/audio/collectStone.wav");
@@ -18,6 +20,7 @@ class AudioHub {
     AudioHub.COLLECTSTONE,
     AudioHub.ENEMY1DEAD,
     AudioHub.ENEMY2DEAD,
+    AudioHub.THROWSTONE,
   ];
 
   static playOneSound(sound) {

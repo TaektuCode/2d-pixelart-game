@@ -8,7 +8,7 @@ class World {
   statusBar = new StatusBar();
   collectableStatusBar = new StatusBarCollectables();
   statusCoins = new StatusCoins();
-  throwableObjects = [new ThrowableObject()];
+  throwableObjects = [];
   isThrowing = false;
   endbossStatusBar = null;
 
