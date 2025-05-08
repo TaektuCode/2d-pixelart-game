@@ -114,6 +114,7 @@ class MainCharacter extends GameObject {
   playDeathAnimation() {
     if (!this.isDeadCharacter) {
       this.isDeadCharacter = true; // Setze den Todeszustand nur einmal
+      AudioHub.playOneSound(AudioHub.CHARACTERDEATH); // Spiele den Death-Sound ab
       let i = 0;
       this.deathAnimationInterval = setInterval(() => {
         this.img = this.imageCache[this.IMAGES_DEAD[i]];
@@ -160,13 +161,15 @@ class MainCharacter extends GameObject {
   }
 
   hit() {
-    const currentTime = Date.now();
-    if (currentTime - this.lastHit > this.hitByEnemyCooldown) {
-      this.hp -= 5;
-      this.lastHit = currentTime;
-      AudioHub.playOneSound(AudioHub.CHARACTERHURT);
-      if (this.hp <= 0) {
-        this.hp = 0;
+    if (!this.isDeadCharacter) {
+      const currentTime = Date.now();
+      if (currentTime - this.lastHit > this.hitByEnemyCooldown) {
+        this.hp -= 5;
+        this.lastHit = currentTime;
+        AudioHub.playOneSound(AudioHub.CHARACTERHURT);
+        if (this.hp <= 0) {
+          this.hp = 0;
+        }
       }
     }
   }
