@@ -25,9 +25,14 @@ class AudioHub {
 
   static ENDBOSS_DEATH = new Audio("assets/audio/endbossDeath.wav");
 
+  static STARTSCREEN_MUSIC = new Audio("assets/audio/startScreen.wav");
+
   static allSounds = [
     AudioHub.CHARACTERWALK,
     AudioHub.CHARACTERJUMP,
+    AudioHub.CHARACTERHURT,
+    AudioHub.CHARACTERDEATH,
+    AudioHub.THROWSTONE,
     AudioHub.COLLECTCOIN,
     AudioHub.COLLECTSTONE,
     AudioHub.ENEMY1DEAD,
@@ -35,7 +40,9 @@ class AudioHub {
     AudioHub.THROWSTONE,
     AudioHub.ENDBOSS_ACTIVATION,
     AudioHub.ENDBOSS_STEP,
+    AudioHub.ENDBOSS_HURT,
     AudioHub.ENDBOSS_DEATH,
+    AudioHub.STARTSCREEN_MUSIC,
   ];
 
   static playOneSound(sound) {
@@ -46,11 +53,27 @@ class AudioHub {
     sound.play().catch(() => {});
   }
 
+  static playLoopingSound(sound) {
+    const soundOn = localStorage.getItem("musicOn") === "true";
+    if (!soundOn || !sound) return;
+    sound.volume = 0.05; // Lautstärke für Hintergrundmusik anpassen
+    sound.loop = true;
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+  }
+
   static stopAllSounds() {
     AudioHub.allSounds.forEach((sound) => sound.pause());
   }
 
   static stopOneSound(sound) {
     sound.pause();
+  }
+
+  static stopStartScreenMusic() {
+    if (AudioHub.STARTSCREEN_MUSIC) {
+      AudioHub.STARTSCREEN_MUSIC.pause();
+      AudioHub.STARTSCREEN_MUSIC.currentTime = 0;
+    }
   }
 }

@@ -3,6 +3,10 @@ class ScreenManager {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.startGameCallback = startGameCallback;
+    this.introScreen = new IntroScreen(
+      canvas,
+      this.showStartScreen.bind(this), // Callback zum Anzeigen des Startbildschirms
+    );
     this.startScreen = new StartScreen(
       canvas,
       this.startGame.bind(this),
@@ -12,8 +16,17 @@ class ScreenManager {
       canvas,
       this.showStartScreen.bind(this),
     );
-    this.activeScreen = this.startScreen; // Starte mit dem Startbildschirm
-    this.drawCurrentScreen(); // Zeichne den Startbildschirm initial
+    this.activeScreen = this.introScreen; // Starte mit dem Intro-Bildschirm
+    this.drawCurrentScreen(); // Zeichne den Intro-Bildschirm initial
+  }
+
+  showIntroScreen() {
+    if (this.activeScreen && this.activeScreen.removeEventListeners) {
+      this.activeScreen.removeEventListeners();
+    }
+    this.activeScreen = this.introScreen;
+    this.activeScreen.show();
+    this.drawCurrentScreen();
   }
 
   showStartScreen() {
@@ -55,7 +68,7 @@ class ScreenManager {
     } else {
       // Landscape-Modus
       if (this.activeScreen instanceof OrientationScreen) {
-        this.showStartScreen(); // Oder den vorherigen Bildschirm
+        this.showIntroScreen(); // Oder den vorherigen Bildschirm
       }
     }
   }
@@ -64,7 +77,7 @@ class ScreenManager {
     if (!this.orientationScreen) {
       this.orientationScreen = new OrientationScreen(
         this.canvas,
-        this.showStartScreen.bind(this),
+        this.showIntroScreen.bind(this),
       );
     }
     if (this.activeScreen && this.activeScreen.removeEventListeners) {

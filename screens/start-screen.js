@@ -14,7 +14,6 @@ class StartScreen {
     this.startGameCallback = startGameCallback;
     this.showControlsCallback = showControlsCallback;
     this.backgroundImage = new Image();
-    this.backgroundImage.src = "img/start_screen_background.png"; // Passe den Pfad an
     this.title = "Order of the Chosen";
     this.startButton = {
       label: "Start Game",
@@ -49,6 +48,7 @@ class StartScreen {
 
   show() {
     this.addEventListeners();
+    AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC); // Starte die Hintergrundmusik
     this.draw();
   }
 
@@ -94,6 +94,7 @@ class StartScreen {
 
     if (this.isPointInside(clickX, clickY, this.startButton)) {
       this.removeEventListeners();
+      AudioHub.stopStartScreenMusic(); // Stoppe die Hintergrundmusik
       this.startGameCallback();
     }
 
