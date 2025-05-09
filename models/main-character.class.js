@@ -113,16 +113,17 @@ class MainCharacter extends GameObject {
 
   playDeathAnimation() {
     if (!this.isDeadCharacter) {
-      this.isDeadCharacter = true; // Setze den Todeszustand nur einmal
-      AudioHub.playOneSound(AudioHub.CHARACTERDEATH); // Spiele den Death-Sound ab
+      this.isDeadCharacter = true;
+      AudioHub.playOneSound(AudioHub.CHARACTERDEATH);
       let i = 0;
       this.deathAnimationInterval = setInterval(() => {
         this.img = this.imageCache[this.IMAGES_DEAD[i]];
         i++;
         if (i >= this.IMAGES_DEAD.length) {
           clearInterval(this.deathAnimationInterval);
-          // Optional: Hier das letzte Bild anzeigen lassen, falls gewünscht
-          // this.img = this.imageCache[this.IMAGES_DEAD[this.IMAGES_DEAD.length - 1]];
+          setTimeout(() => {
+            this.world.clearAllIntervals();
+          }, 2000);
         }
       }, 130);
     }

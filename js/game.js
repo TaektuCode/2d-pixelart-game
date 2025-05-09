@@ -17,7 +17,12 @@ function init() {
   window.addEventListener("keyup", keyboardKeyUp);
 }
 
+function clearAllIntervals() {
+  for (let i = 1; i < 9999; i++) window.clearInterval(i);
+}
+
 function startGame() {
+  clearAllIntervals();
   level1 = buildLevel1(); // Rufe deine Funktion auf, um das Level zu erstellen
   world = new World(canvas, keyboard, level1); // Übergib das Level an die World-Klasse
   world.startGameLoop(); // Starte die Spiellogik
