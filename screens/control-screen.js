@@ -1,28 +1,37 @@
 /**
- * Repräsentiert den Bildschirm mit der Spielsteuerung.
+ * Repräsentiert den Bildschirm für die Spielsteuerung.
  */
 class ControlScreen {
   /**
    * Erstellt eine neue ControlScreen-Instanz.
    * @param {HTMLCanvasElement} canvas - Das Canvas-Element, auf dem der Bildschirm gerendert wird.
-   * @param {Function} showStartScreenCallback - Callback-Funktion, um zum Startbildschirm zurückzukehren.
+   * @param {Function} showStartScreenCallback - Callback-Funktion, die aufgerufen wird, um zum Startbildschirm zurückzukehren.
+   * @param {Function} startGameCallback - Callback zum Starten des Spiels
    */
-  constructor(canvas, showStartScreenCallback) {
+  constructor(canvas, showStartScreenCallback, startGameCallback) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.showStartScreenCallback = showStartScreenCallback;
+    this.startGameCallback = startGameCallback; // Speichere den startGameCallback
     this.backgroundImage = new Image();
-    this.backgroundImage.src = "assets/img/9_intro_outro_screens/controls.png"; // Passe den Pfad an
-    this.backButton = {
-      label: "Zurück",
-      x: 50,
-      y: 400,
-      width: 100,
-      height: 40,
-    }; // Passe Position und Text an
+    this.backgroundImage.src = "assets/img/ui/menu_bg.png"; // Pfad zum Hintergrundbild
+    this.backgroundImageLoaded = false;
+    this.backButton = { x: 0, y: 100, width: 0, height: 0, label: "Back" }; // Dummy
+    this.startGameButton = {
+      x: 0,
+      y: 0,
+      width: 0,
+      height: 0,
+      label: "Start Game",
+    }; // Start Game Button
     this.setBindings();
     this.addEventListeners();
-    this.backgroundImage.onload = () => this.draw();
+
+    this.backgroundImage.onload = () => {
+      this.backgroundImageLoaded = true;
+      this.draw();
+    };
+    this.draw();
   }
 
   setBindings() {
@@ -44,9 +53,7 @@ class ControlScreen {
 
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.fillStyle = "lightgray";
-    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    if (this.backgroundImage.complete) {
+    if (this.backgroundImageLoaded) {
       this.ctx.drawImage(
         this.backgroundImage,
         0,
@@ -54,27 +61,88 @@ class ControlScreen {
         this.canvas.width,
         this.canvas.height,
       );
+      const buttonWidth = 200;
+      const buttonHeight = 50;
+      const buttonSpacing = 20; // Abstand zwischen den Buttons
+
+      // Berechne die Startposition für die Buttons, um sie horizontal zu zentrieren
+      const totalButtonWidth = 2 * buttonWidth + buttonSpacing;
+      const startX = (this.canvas.width - totalButtonWidth) / 2;
+      const buttonY = this.canvas.height - buttonHeight - 75; // Beibehale die Y-Position
+
+      this.backButton = {
+        label: "Back",
+        x: startX,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+      this.startGameButton = {
+        label: "Start Game",
+        x: startX + buttonWidth + buttonSpacing,
+        y: buttonY,
+        width: buttonWidth,
+        height: buttonHeight,
+      };
+      this.drawButton(this.backButton);
+      this.drawButton(this.startGameButton);
+      this.drawControlsText();
+    } else {
+      this.ctx.fillStyle = "black";
+      this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+      this.ctx.fillStyle = "white";
+      this.ctx.font = "20px sans-serif";
+      this.ctx.textAlign = "center";
+      this.ctx.fillText(
+        "Loading...",
+        this.canvas.width / 2,
+        this.canvas.height / 2,
+      );
     }
-    this.ctx.font = "24px Arial";
-    this.ctx.fillStyle = "black";
-    this.ctx.fillText("Steuerung:", 50, 50);
-    this.ctx.fillText("Pfeiltasten links/rechts: Bewegen", 50, 80);
-    this.ctx.fillText("Pfeiltaste hoch: Springen", 50, 110);
-    this.ctx.fillText("Taste D: Werfen", 50, 140);
-    // Zeichne Zurück-Button
-    this.ctx.fillStyle = "darkgray";
-    this.ctx.fillRect(
-      this.backButton.x,
-      this.backButton.y,
-      this.backButton.width,
-      this.backButton.height,
-    );
+  }
+
+  drawButton(button) {
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    this.ctx.fillRect(button.x, button.y, button.width, button.height);
+    this.ctx.font = "24px sans-serif";
     this.ctx.fillStyle = "white";
+    this.ctx.textAlign = "center";
     this.ctx.fillText(
-      this.backButton.label,
-      this.backButton.x + 10,
-      this.backButton.y + 25,
+      button.label,
+      button.x + button.width / 2,
+      button.y + button.height / 2 + 8,
     );
+  }
+
+  drawControlsText() {
+    this.ctx.fillStyle = "white";
+    this.ctx.font = "20px sans-serif";
+    this.ctx.textAlign = "center";
+
+    const textLines = [
+      "Use the following keys to control the game:",
+      "",
+      "",
+      "Arrow Keys: Move your character",
+      "Spacebar: Jump",
+      "D: Attack",
+    ];
+    let maxWidth = 0;
+    textLines.forEach((line) => {
+      const width = this.ctx.measureText(line).width;
+      if (width > maxWidth) {
+        maxWidth = width;
+      }
+    });
+
+    const startX = this.canvas.width / 2;
+    let startY = this.canvas.height / 2 - (textLines.length * 30) / 2 - 50; // Adjusted position
+    const lineHeight = 30;
+
+    textLines.forEach((line) => {
+      this.ctx.fillText(line, startX, startY);
+      startY += lineHeight;
+    });
   }
 
   handleClick(event) {
@@ -82,14 +150,22 @@ class ControlScreen {
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
-    if (
-      clickX > this.backButton.x &&
-      clickX < this.backButton.x + this.backButton.width &&
-      clickY > this.backButton.y &&
-      clickY < this.backButton.y + this.backButton.height
-    ) {
+    if (this.isPointInside(clickX, clickY, this.backButton)) {
       this.removeEventListeners();
       this.showStartScreenCallback();
+    } else if (this.isPointInside(clickX, clickY, this.startGameButton)) {
+      this.removeEventListeners();
+      AudioHub.stopStartScreenMusic(); // Stoppe die Hintergrundmusik
+      this.startGameCallback();
     }
+  }
+
+  isPointInside(x, y, rect) {
+    return (
+      x >= rect.x &&
+      x <= rect.x + rect.width &&
+      y >= rect.y &&
+      y <= rect.y + rect.height
+    );
   }
 }

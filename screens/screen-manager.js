@@ -15,9 +15,10 @@ class ScreenManager {
     this.controlsScreen = new ControlScreen(
       canvas,
       this.showStartScreen.bind(this),
+      this.startGame.bind(this), // Übergabe der startGameCallback Funktion
     );
-    this.activeScreen = this.introScreen; // Starte mit dem Intro-Bildschirm
-    this.drawCurrentScreen(); // Zeichne den Intro-Bildschirm initial
+    this.activeScreen = this.introScreen;
+    this.drawCurrentScreen();
   }
 
   showIntroScreen() {
@@ -51,8 +52,8 @@ class ScreenManager {
     if (this.activeScreen && this.activeScreen.removeEventListeners) {
       this.activeScreen.removeEventListeners();
     }
-    this.activeScreen = null; // Setze activeScreen auf null, um das Spiel zu starten
-    this.startGameCallback(); // Rufe die startGame-Funktion in game.js auf
+    this.activeScreen = null;
+    this.startGameCallback();
   }
 
   drawCurrentScreen() {
@@ -63,12 +64,10 @@ class ScreenManager {
 
   checkOrientation() {
     if (window.innerWidth < window.innerHeight) {
-      // Portrait-Modus
       this.showOrientationScreen();
     } else {
-      // Landscape-Modus
       if (this.activeScreen instanceof OrientationScreen) {
-        this.showIntroScreen(); // Oder den vorherigen Bildschirm
+        this.showIntroScreen();
       }
     }
   }

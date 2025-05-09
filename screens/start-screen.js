@@ -51,7 +51,6 @@ class StartScreen {
 
   show() {
     this.addEventListeners();
-    AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC); // Starte die Hintergrundmusik
     this.draw();
   }
 

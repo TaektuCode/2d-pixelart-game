@@ -3,11 +3,16 @@ let world;
 let keyboard = new Keyboard();
 let screenManager;
 let level1;
+let musicPlaying = false;
 
 function init() {
   localStorage.setItem("musicOn", "true");
   canvas = document.getElementById("canvas");
-  screenManager = new ScreenManager(canvas, startGame); // Übergib startGame als Callback
+  screenManager = new ScreenManager(canvas, startGame);
+  if (!musicPlaying) {
+    AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC);
+    musicPlaying = true;
+  }
   window.addEventListener("keydown", keyboardKeyDown);
   window.addEventListener("keyup", keyboardKeyUp);
 }
