@@ -110,7 +110,7 @@ class ControlScreen {
     this.ctx.fillText(
       button.label,
       button.x + button.width / 2,
-      button.y + button.height / 2 + 8,
+      button.y + button.height / 2,
     );
   }
 
