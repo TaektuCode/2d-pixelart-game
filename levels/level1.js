@@ -51,6 +51,15 @@ function buildLevel1() {
         720 * 3,
         340,
       ),
+      new BackgroundObject("assets/img/background/sky.png", 720 * 4, 0), // path, x,
+      new BackgroundObject("assets/img/background/rocks.png", 720 * 4, 0),
+      new BackgroundObject("assets/img/background/rocks2.png", 720 * 4, 0),
+      new BackgroundObject("assets/img/background/rocks3.png", 720 * 4, 0),
+      new BackgroundObject(
+        "assets/img/background/ground_tile07.png",
+        720 * 4,
+        340,
+      ),
     ],
     [
       new CollectableObjects(200, 300),

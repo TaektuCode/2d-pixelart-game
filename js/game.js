@@ -79,10 +79,7 @@ function keyboardKeyUp(event) {
 
 // Neue Funktion zum Anzeigen von Bildschirmen
 function showScreen(screenName) {
-  if (!screenManager) {
-    console.error("ScreenManager is not initialized.");
-    return;
-  } else if (screenManager) {
+  if (screenManager) {
     console.log("screenManager da");
   }
   switch (screenName) {
