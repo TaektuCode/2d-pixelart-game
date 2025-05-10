@@ -25,6 +25,11 @@ class IntroScreen {
     this.canvas.removeEventListener("click", this.boundHandleClick);
   }
 
+  show() {
+    this.addEventListeners();
+    this.draw();
+  }
+
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 

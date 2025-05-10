@@ -15,6 +15,7 @@ class StartScreen {
     this.showControlsCallback = showControlsCallback;
     this.backgroundImage = new Image();
     this.backgroundImage.src = "assets/img/ui/menu_bg.png";
+    this.backgroundImageLoaded = false;
     this.startButton = {
       label: "Start Game",
       x: canvas.width / 2 - 110,
@@ -57,7 +58,7 @@ class StartScreen {
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-    if (this.backgroundImage.complete) {
+    if (this.backgroundImageLoaded) {
       this.ctx.drawImage(
         this.backgroundImage,
         0,

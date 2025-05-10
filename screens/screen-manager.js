@@ -1,12 +1,11 @@
 class ScreenManager {
-  constructor(canvas, startGameCallback) {
+  constructor(canvas, startGameCallback, showGameOverCallback) {
+    // Added showGameOverCallback
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.startGameCallback = startGameCallback;
-    this.introScreen = new IntroScreen(
-      canvas,
-      this.showStartScreen.bind(this), // Callback zum Anzeigen des Startbildschirms
-    );
+    this.showGameOverCallback = showGameOverCallback; // Store the new callback
+    this.introScreen = new IntroScreen(canvas, this.showStartScreen.bind(this));
     this.startScreen = new StartScreen(
       canvas,
       this.startGame.bind(this),
@@ -15,45 +14,46 @@ class ScreenManager {
     this.controlsScreen = new ControlScreen(
       canvas,
       this.showStartScreen.bind(this),
-      this.startGame.bind(this), // Übergabe der startGameCallback Funktion
+      this.startGame.bind(this),
+    );
+    this.gameOverScreen = new GameOverScreen( // Create GameOverScreen instance
+      canvas,
+      this.startGame.bind(this), // Restart callback
+      this.showStartScreen.bind(this), // Menu callback
     );
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();
   }
 
   showIntroScreen() {
-    if (this.activeScreen && this.activeScreen.removeEventListeners) {
-      this.activeScreen.removeEventListeners();
-    }
-    this.activeScreen = this.introScreen;
-    this.activeScreen.show();
-    this.drawCurrentScreen();
+    this.switchToScreen(this.introScreen);
   }
 
   showStartScreen() {
-    if (this.activeScreen && this.activeScreen.removeEventListeners) {
-      this.activeScreen.removeEventListeners();
-    }
-    this.activeScreen = this.startScreen;
-    this.activeScreen.show();
-    this.drawCurrentScreen();
+    this.switchToScreen(this.startScreen);
   }
 
   showControlsScreen() {
-    if (this.activeScreen && this.activeScreen.removeEventListeners) {
-      this.activeScreen.removeEventListeners();
-    }
-    this.activeScreen = this.controlsScreen;
-    this.activeScreen.show();
-    this.drawCurrentScreen();
+    this.switchToScreen(this.controlsScreen);
   }
 
   startGame() {
+    this.activeScreen = null;
+    this.startGameCallback();
+  }
+
+  showGameOverScreen() {
+    // New method to show game over screen
+    this.switchToScreen(this.gameOverScreen);
+  }
+
+  switchToScreen(screen) {
     if (this.activeScreen && this.activeScreen.removeEventListeners) {
       this.activeScreen.removeEventListeners();
     }
-    this.activeScreen = null;
-    this.startGameCallback();
+    this.activeScreen = screen;
+    this.activeScreen.show();
+    this.drawCurrentScreen();
   }
 
   drawCurrentScreen() {
@@ -79,11 +79,6 @@ class ScreenManager {
         this.showIntroScreen.bind(this),
       );
     }
-    if (this.activeScreen && this.activeScreen.removeEventListeners) {
-      this.activeScreen.removeEventListeners();
-    }
-    this.activeScreen = this.orientationScreen;
-    this.activeScreen.show();
-    this.drawCurrentScreen();
+    this.switchToScreen(this.orientationScreen);
   }
 }

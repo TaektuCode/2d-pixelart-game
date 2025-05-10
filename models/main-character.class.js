@@ -122,7 +122,7 @@ class MainCharacter extends GameObject {
         if (i >= this.IMAGES_DEAD.length) {
           clearInterval(this.deathAnimationInterval);
           setTimeout(() => {
-            this.world.clearAllIntervals();
+            gameOver();
           }, 2000);
         }
       }, 130);
@@ -165,7 +165,7 @@ class MainCharacter extends GameObject {
     if (!this.isDeadCharacter) {
       const currentTime = Date.now();
       if (currentTime - this.lastHit > this.hitByEnemyCooldown) {
-        this.hp -= 5;
+        this.hp -= 25;
         this.lastHit = currentTime;
         AudioHub.playOneSound(AudioHub.CHARACTERHURT);
         if (this.hp <= 0) {
