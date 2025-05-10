@@ -4,17 +4,42 @@ let keyboard = new Keyboard();
 let screenManager;
 let level1;
 let musicPlaying = false;
+const muteButton = document.getElementById("muteButton");
+const muteIcon = document.getElementById("muteIcon");
 
 function init() {
-  localStorage.setItem("musicOn", "true");
   canvas = document.getElementById("canvas");
   screenManager = new ScreenManager(canvas, startGame);
-  if (!musicPlaying) {
-    AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC);
-    musicPlaying = true;
-  }
   window.addEventListener("keydown", keyboardKeyDown);
   window.addEventListener("keyup", keyboardKeyUp);
+  window.onload = () => {
+    initializeMuteButton();
+    if (!musicPlaying) {
+      AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC);
+      musicPlaying = true;
+    }
+  };
+}
+
+function initializeMuteButton() {
+  const muteButton = document.getElementById("muteButton");
+  const muteIcon = document.getElementById("muteIcon");
+  let isMuted = localStorage.getItem("musicOn") === "false";
+  AudioHub.isMuted = isMuted;
+  updateMuteButtonIcon();
+
+  muteButton.addEventListener("click", () => {
+    isMuted = !isMuted;
+    AudioHub.muteAll(isMuted);
+    localStorage.setItem("musicOn", !isMuted);
+    updateMuteButtonIcon();
+  });
+
+  function updateMuteButtonIcon() {
+    muteIcon.src = isMuted
+      ? "assets/img/ui/volume-mute.png"
+      : "assets/img/ui/volume.png";
+  }
 }
 
 function clearAllIntervals() {
