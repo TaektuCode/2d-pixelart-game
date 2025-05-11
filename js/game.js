@@ -3,6 +3,7 @@ let world;
 let keyboard = new Keyboard();
 let screenManager;
 let level1;
+let gameIsOver = false;
 let musicPlaying = false;
 const muteButton = document.getElementById("muteButton");
 const muteIcon = document.getElementById("muteIcon");
@@ -48,11 +49,14 @@ function clearAllIntervals() {
 
 function gameOver() {
   console.log("gameOver wird aufgerufen");
+  AudioHub.stopAllSounds();
+  gameIsOver = true;
   showScreen("gameOver");
   clearAllIntervals();
 }
 
 function startGame() {
+  gameIsOver = false;
   clearAllIntervals();
   level1 = buildLevel1();
   world = new World(canvas, keyboard, level1);
@@ -80,7 +84,7 @@ function keyboardKeyUp(event) {
 // Neue Funktion zum Anzeigen von Bildschirmen
 function showScreen(screenName) {
   if (screenManager) {
-    console.log("screenManager da");
+    // console.log("screenManager da");
   }
   switch (screenName) {
     case "intro":

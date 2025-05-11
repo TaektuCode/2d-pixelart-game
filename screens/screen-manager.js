@@ -23,6 +23,16 @@ class ScreenManager {
     );
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();
+    this.isRunning = true;
+    this.drawLoop();
+  }
+
+  drawLoop() {
+    setInterval(() => {
+      if (this.isRunning && this.activeScreen) {
+        this.activeScreen.draw();
+      }
+    }, 1000 / 60); // Beispiel-FPS
   }
 
   showIntroScreen() {
@@ -52,8 +62,16 @@ class ScreenManager {
       this.activeScreen.removeEventListeners();
     }
     this.activeScreen = screen;
-    this.activeScreen.show();
-    this.drawCurrentScreen();
+    if (screen === this.gameOverScreen) {
+      this.isRunning = false; // Stoppe den Haupt-Draw-Loop
+    } else {
+      this.isRunning = true; // Starte ihn wieder für andere Bildschirme
+    }
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.activeScreen && this.activeScreen.show) {
+      this.activeScreen.show();
+    }
+    this.drawCurrentScreen(); // Zeichne den neuen Bildschirm sofort
   }
 
   drawCurrentScreen() {
