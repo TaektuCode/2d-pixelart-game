@@ -21,7 +21,7 @@ class Enemy1 extends GameObject {
     this.animate();
 
     this.offset = {
-      top: 50, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
+      top: 35, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
       left: 35, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
       right: 10, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
       bottom: 10, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze

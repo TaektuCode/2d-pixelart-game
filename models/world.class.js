@@ -70,13 +70,10 @@ class World {
         this.character.isColliding(enemy) &&
         !this.character.isDeadCharacter
       ) {
-        // Überprüfe, ob der Charakter nicht tot ist
         if (
           this.character.isJumping &&
           this.character.speedY <= 0 &&
-          this.character.y + this.character.height <
-            enemy.y + enemy.height + 100 &&
-          this.character.y < 330
+          this.character.y + this.character.height <= enemy.y + 100 // Angepasste Toleranz
         ) {
           enemy.hit();
           this.level.enemies.splice(index, 1);
@@ -134,6 +131,11 @@ class World {
         // Nur prüfen, wenn der Stein nicht entfernt wurde
         this.level.enemies.forEach((enemy, enemyIndex) => {
           if (throwableObject.isColliding(enemy)) {
+            if (enemy instanceof Enemy1) {
+              AudioHub.playOneSound(AudioHub.ENEMY1DEAD);
+            } else if (enemy instanceof Enemy2) {
+              AudioHub.playOneSound(AudioHub.ENEMY2DEAD);
+            }
             this.level.enemies.splice(enemyIndex, 1);
             throwableObject.remove(); // Entferne den Stein nach der Kollision
           }

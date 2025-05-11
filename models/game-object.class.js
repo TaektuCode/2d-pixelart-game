@@ -41,27 +41,21 @@ class GameObject extends DrawableObject {
   }
 
   isColliding(go) {
-    let thisLeft = this.x + this.offset.left;
-    let thisRight = this.x + this.width - this.offset.right;
-    let thisTop = this.y + this.offset.top;
-    let thisBottom = this.y + this.height - this.offset.bottom;
+    let charLeft = this.x + this.offset.left;
+    let charRight = this.x + this.width - this.offset.right;
+    let charTop = this.y + this.offset.top;
+    let charBottom = this.y + this.height - this.offset.bottom;
 
     let goLeft = go.x + go.offset.left;
     let goRight = go.x + go.width - go.offset.right;
     let goTop = go.y + go.offset.top;
     let goBottom = go.y + go.height - go.offset.bottom;
 
-    if (this.otherDirection) {
-      let originalLeft = thisLeft;
-      thisLeft = thisRight;
-      thisRight = originalLeft;
-    }
-
     return (
-      thisRight > goLeft &&
-      thisBottom > goTop &&
-      thisLeft < goRight &&
-      thisTop < goBottom
+      charRight > goLeft &&
+      charBottom > goTop &&
+      charLeft < goRight &&
+      charTop < goBottom
     );
   }
 
