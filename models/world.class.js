@@ -37,6 +37,7 @@ class World {
       this.checkEndbossActivation();
       this.checkThrowableObjectCollisionWithEndboss();
     }, 100);
+    AudioHub.playLoopingSound(AudioHub.GAME_MUSIC);
   }
 
   checkThrowObjects() {
@@ -46,7 +47,7 @@ class World {
       let stone = new ThrowableObject(
         this.character.x + this.character.width / 2,
         this.character.y + this.character.height / 2,
-        this.character.otherDirection, // Übergabe der Blickrichtung des Charakters
+        this.character.otherDirection,
       );
       this.throwableObjects.push(stone);
       stone.throw();
@@ -54,7 +55,7 @@ class World {
       console.log(
         "Stein geworfen. Verbleibende Anzahl:",
         this.character.stones,
-      ); // Optional zur Überprüfung
+      );
       this.collectableStatusBar.setCollectableCount(this.character.stones);
       setTimeout(() => {
         this.isThrowing = false;
@@ -73,7 +74,7 @@ class World {
         if (
           this.character.isJumping &&
           this.character.speedY <= 0 &&
-          this.character.y + this.character.height <= enemy.y + 100 // Angepasste Toleranz
+          this.character.y + this.character.height <= enemy.y + 100
         ) {
           enemy.hit();
           this.level.enemies.splice(index, 1);
@@ -98,8 +99,10 @@ class World {
         !endboss.isDead &&
         !endboss.hasAttacked
       ) {
+        AudioHub.stopOneSound(AudioHub.GAME_MUSIC);
         AudioHub.playOneSound(AudioHub.ENDBOSS_ACTIVATION); // Spiele den Aktivierungs-Sound ab
         endboss.hasAttacked = true;
+        AudioHub.playLoopingSound(AudioHub.ENDBOSS_FIGHT);
         endboss.playAttackAnimation(() => {
           endboss.isMovingLeft = true;
           endboss.startMovingLeft();

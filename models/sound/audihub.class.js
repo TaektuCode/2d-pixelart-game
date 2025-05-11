@@ -13,6 +13,8 @@ class AudioHub {
   static ENDBOSS_HURT = new Audio("assets/audio/endbossHurt.wav");
   static ENDBOSS_DEATH = new Audio("assets/audio/endbossDeath.wav");
   static STARTSCREEN_MUSIC = new Audio("assets/audio/startScreen.wav");
+  static GAME_MUSIC = new Audio("assets/audio/gameMusic.wav");
+  static ENDBOSS_FIGHT = new Audio("assets/audio/endbossFight.wav");
 
   static allSounds = [
     AudioHub.CHARACTERWALK,
@@ -30,6 +32,8 @@ class AudioHub {
     AudioHub.ENDBOSS_HURT,
     AudioHub.ENDBOSS_DEATH,
     AudioHub.STARTSCREEN_MUSIC,
+    AudioHub.GAME_MUSIC,
+    AudioHub.ENDBOSS_FIGHT,
   ];
 
   static isMuted = false;
