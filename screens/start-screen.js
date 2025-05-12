@@ -17,14 +17,14 @@ class StartScreen {
     this.backgroundImage.src = "assets/img/ui/menu_bg.png";
     this.backgroundImageLoaded = false;
     this.startButton = {
-      label: "Start Game",
+      label: "Controls",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2 - 75,
       width: 200,
       height: 50,
     };
     this.controlsButton = {
-      label: "Controls",
+      label: "Start Game",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2,
       width: 200,
@@ -86,19 +86,18 @@ class StartScreen {
   }
 
   handleClick(event) {
+    console.log("this im StartScreen.handleClick:", this);
     const rect = this.canvas.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
 
     if (this.isPointInside(clickX, clickY, this.startButton)) {
       this.removeEventListeners();
-      AudioHub.stopStartScreenMusic(); // Stoppe die Hintergrundmusik
-      this.startGameCallback();
-    }
-
-    if (this.isPointInside(clickX, clickY, this.controlsButton)) {
-      this.removeEventListeners();
       this.showControlsCallback();
+    } else if (this.isPointInside(clickX, clickY, this.controlsButton)) {
+      this.removeEventListeners();
+      AudioHub.stopStartScreenMusic();
+      this.startGameCallback();
     }
   }
 
