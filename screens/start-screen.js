@@ -34,6 +34,7 @@ class StartScreen {
     };
     this.setBindings();
     this.addEventListeners();
+    this.updateDimensions(); // Unbenannt und Ruft alles Notwendige auf
     this.backgroundImage.onload = () => {
       this.backgroundImageLoaded = true;
       this.draw();
@@ -81,7 +82,6 @@ class StartScreen {
         this.canvas.height,
       );
     }
-
     this.drawButton(this.startButton);
     this.drawButton(this.controlsButton);
   }
