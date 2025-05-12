@@ -70,10 +70,12 @@ canvas {
 
 @media only screen and (max-width: 720px) {
   #gameBox {
-    width: 100%;
+    width: 100% !important;
+    height: 100vh !important;
   }
   canvas {
-    width: 100%;
+    width: 100% !important;
+    height: 100vh !important;
     z-index: 10;
   }
 
@@ -88,12 +90,12 @@ canvas {
 
 @media only screen and (max-height: 480px) {
   #gameBox {
-    height: 100vh;
-    width: 100%;
+    height: 100vh !important;
+    width: 100% !important;
   }
   canvas {
-    height: 100vh;
-    width: 100%;
+    height: 100vh !important;
+    width: 100% !important;
   }
 
   h1 {

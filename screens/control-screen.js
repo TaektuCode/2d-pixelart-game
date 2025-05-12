@@ -53,6 +53,7 @@ class ControlScreen {
   }
 
   show() {
+    this.removeEventListeners();
     this.addEventListeners();
     this.draw();
   }
@@ -150,7 +151,7 @@ class ControlScreen {
     let clickY = event.clientY - rect.top; // Verwende let
 
     if (event.type === "touchstart") {
-      const touch = event.touches[0];
+      const touch = event.changedTouches[0];
       clickX = touch.clientX - rect.left;
       clickY = touch.clientY - rect.top;
       event.preventDefault();

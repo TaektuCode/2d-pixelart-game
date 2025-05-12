@@ -104,6 +104,9 @@ class ScreenManager {
       this.activeScreen.draw();
     }
     this.drawCurrentScreen(); // Zeichne den neuen Bildschirm sofort
+    if (this.activeScreen && typeof this.activeScreen.show === "function") {
+      this.activeScreen.show(); // Sicherstellen, dass show() aufgerufen wird
+    }
   }
 
   drawCurrentScreen() {
