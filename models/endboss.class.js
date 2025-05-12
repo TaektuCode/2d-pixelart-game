@@ -92,8 +92,9 @@ class Endboss extends GameObject {
       i++;
       if (i >= this.IMAGES_DEAD.length) {
         clearInterval(this.deathAnimationInterval);
-        this.toBeRemoved = true;
-        console.log("animateDeath: Intervall gestoppt!"); // Überprüfe das hier
+        setTimeout(() => {
+          gameWon();
+        }, 2000);
       }
     }, 215);
   }

@@ -4,6 +4,7 @@ let keyboard = new Keyboard();
 let screenManager;
 let level1;
 let gameIsOver = false;
+let gameIsWon = false;
 let musicPlaying = false;
 const muteButton = document.getElementById("muteButton");
 const muteIcon = document.getElementById("muteIcon");
@@ -55,6 +56,14 @@ function gameOver() {
   clearAllIntervals();
 }
 
+function gameWon() {
+  console.log("gameWon wird aufgerufen");
+  AudioHub.stopAllSounds();
+  gameIsOver = true;
+  showScreen("gameWon");
+  clearAllIntervals();
+}
+
 function startGame() {
   gameIsOver = false;
   clearAllIntervals();
@@ -98,6 +107,9 @@ function showScreen(screenName) {
       break;
     case "gameOver":
       screenManager.showGameOverScreen();
+      break;
+    case "gameWon":
+      screenManager.showWinScreen();
       break;
     default:
       console.warn(`Screen "${screenName}" is not defined.`);

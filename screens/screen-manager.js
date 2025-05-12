@@ -21,6 +21,11 @@ class ScreenManager {
       this.startGame.bind(this), // Restart callback
       this.showStartScreen.bind(this), // Menu callback
     );
+    this.winScreen = new WinScreen( // Erstelle eine Instanz des WinScreen
+      canvas,
+      this.startGame.bind(this), // Callback für "Play Again" (hier wird startGame verwendet)
+      this.closeGame, // Callback für "Close Game" (muss noch definiert werden)
+    );
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();
     this.isRunning = true;
@@ -55,6 +60,14 @@ class ScreenManager {
   showGameOverScreen() {
     // New method to show game over screen
     this.switchToScreen(this.gameOverScreen);
+  }
+
+  showWinScreen() {
+    this.switchToScreen(this.winScreen);
+  }
+
+  closeGame() {
+    window.close(); // Diese Funktion schließt das Browserfenster
   }
 
   switchToScreen(screen) {
