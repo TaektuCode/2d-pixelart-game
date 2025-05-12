@@ -34,7 +34,6 @@ class StartScreen {
     };
     this.setBindings();
     this.addEventListeners();
-    this.updateDimensions(); // Unbenannt und Ruft alles Notwendige auf
     this.backgroundImage.onload = () => {
       this.backgroundImageLoaded = true;
       this.draw();
