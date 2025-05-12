@@ -88,10 +88,10 @@ class IntroScreen {
     }
   }
 
-  handleClick(event) {
-    this.removeEventListeners();
+  handleClick() {
     AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC);
     this.onContinueCallback(); // Wechsel zum StartScreen
+    this.removeEventListeners();
   }
 
   wrapText(context, text, x, y, maxWidth, lineHeight) {

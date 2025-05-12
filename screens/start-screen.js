@@ -16,44 +16,36 @@ class StartScreen {
     this.backgroundImage = new Image();
     this.backgroundImage.src = "assets/img/ui/menu_bg.png";
     this.backgroundImageLoaded = false;
-    this.updateButtonPositions(); // Initial Button-Positionen setzen
+    this.startButton = {
+      // Oben
+      label: "Start Game",
+      x: canvas.width / 2 - 110,
+      y: canvas.height / 2 - 75,
+      width: 200,
+      height: 50,
+    };
+    this.controlsButton = {
+      // Unten
+      label: "Controls",
+      x: canvas.width / 2 - 110,
+      y: canvas.height / 2,
+      width: 200,
+      height: 50,
+    };
     this.setBindings();
     this.addEventListeners();
     this.backgroundImage.onload = () => {
       this.backgroundImageLoaded = true;
       this.draw();
     };
-  }
-
-  updateButtonPositions() {
-    const rect = this.canvas.getBoundingClientRect();
-    const buttonWidth = 200;
-    const buttonHeight = 50;
-    const spacing = 20; // Abstand zwischen den Buttons
-
-    const totalWidth = buttonWidth * 2 + spacing;
-    const startX = (rect.width - totalWidth) / 2; // Zentriert die Button-Gruppe horizontal
-
-    this.startButton = {
-      // "Controls"-Button (jetzt links)
-      label: "Start Game",
-      x: startX,
-      y: rect.height / 2 - buttonHeight / 2, // Zentriert vertikal
-      width: buttonWidth,
-      height: buttonHeight,
-    };
-    this.controlsButton = {
-      // "Start Game"-Button (jetzt rechts)
-      label: "Controls",
-      x: startX + buttonWidth + spacing,
-      y: rect.height / 2 - buttonHeight / 2, // Zentriert vertikal
-      width: buttonWidth,
-      height: buttonHeight,
-    };
+    this.handleResize();
   }
 
   handleResize() {
-    this.updateButtonPositions();
+    this.startButton.x = this.canvas.width / 2 - 110;
+    this.startButton.y = this.canvas.height / 2 - 100;
+    this.controlsButton.x = this.canvas.width / 2 - 110;
+    this.controlsButton.y = this.canvas.height / 2;
     this.draw();
   }
 
@@ -63,14 +55,16 @@ class StartScreen {
 
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
-    this.canvas.addEventListener("touchstart", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick); // Für Touch-Eingabe
   }
 
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick); // Auch Touch-Listener entfernen
   }
 
   show() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.addEventListeners();
     this.draw();
   }
@@ -93,14 +87,15 @@ class StartScreen {
   }
 
   drawButton(button) {
+    this.ctx.strokeStyle = "red"; // Temporäre rote Umrandung
+    this.ctx.lineWidth = 2;
+    this.ctx.strokeRect(button.x, button.y, button.width, button.height);
+
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     this.ctx.fillRect(button.x, button.y, button.width, button.height);
-    this.ctx.font = `${
-      24 * (this.canvas.getBoundingClientRect().height / this.canvas.height)
-    }px sans-serif`;
+    this.ctx.font = "24px sans-serif";
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "center";
-    this.ctx.textBaseline = "middle";
     this.ctx.fillText(
       button.label,
       button.x + button.width / 2,
@@ -109,67 +104,30 @@ class StartScreen {
   }
 
   handleClick(event) {
-    console.log("handleClick Event:", event.type);
-    let clientX, clientY;
+    console.log("handleClick wurde ausgelöst!", event.type);
+    let clickX, clickY;
+    const rect = this.canvas.getBoundingClientRect();
 
     if (event.type === "touchstart") {
-      const touch = event.touches[0];
-      clientX = touch.clientX;
-      clientY = touch.clientY;
+      clickX = event.touches[0].clientX - rect.left;
+      clickY = event.touches[0].clientY - rect.top;
       event.preventDefault();
     } else {
-      clientX = event.clientX;
-      clientY = event.clientY;
+      clickX = event.clientX - rect.left;
+      clickY = event.clientY - rect.top;
     }
 
-    const rect = this.canvas.getBoundingClientRect();
-    console.log("Canvas getBoundingClientRect():", rect);
+    console.log("Klick/Touch Koordinaten:", clickX, clickY);
+    console.log("Start Button:", this.startButton);
+    console.log("Controls Button:", this.controlsButton);
 
-    const clickX = clientX - rect.left;
-    const clickY = clientY - rect.top;
-
-    console.log(
-      "startButton (Start Game) - X:",
-      this.startButton.x,
-      "EndX:",
-      this.startButton.x + this.startButton.width,
-      "Y:",
-      this.startButton.y,
-      "EndY:",
-      this.startButton.y + this.startButton.height,
-    );
-    console.log(
-      "controlsButton (Controls) - X:",
-      this.controlsButton.x,
-      "EndX:",
-      this.controlsButton.x + this.controlsButton.width,
-      "Y:",
-      this.controlsButton.y,
-      "EndY:",
-      this.controlsButton.y + this.controlsButton.height,
-    );
-    console.log("Klick/Touch X:", clickX, "Y:", clickY);
-
-    // Zuerst prüfen, ob der Klick im Bereich des "Start Game"-Buttons liegt
-    if (
-      clickX >= this.startButton.x &&
-      clickX <= this.startButton.x + this.startButton.width &&
-      clickY >= this.startButton.y &&
-      clickY <= this.startButton.y + this.startButton.height
-    ) {
+    if (this.isPointInside(clickX, clickY, this.controlsButton)) {
       this.removeEventListeners();
       AudioHub.stopStartScreenMusic();
-      this.startGameCallback();
-    }
-    // Dann prüfen, ob der Klick im Bereich des "Controls"-Buttons liegt
-    else if (
-      clickX >= this.controlsButton.x &&
-      clickX <= this.controlsButton.x + this.controlsButton.width &&
-      clickY >= this.controlsButton.y &&
-      clickY <= this.controlsButton.y + this.controlsButton.height
-    ) {
+      this.startGameCallback(); // "Start Game" Button (oben) startet das Spiel
+    } else if (this.isPointInside(clickX, clickY, this.startButton)) {
       this.removeEventListeners();
-      this.showControlsCallback();
+      this.showControlsCallback(); // "Controls" Button (unten) zeigt Controls-Screen
     }
   }
 

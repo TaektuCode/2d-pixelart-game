@@ -56,7 +56,7 @@ class ScreenManager {
     ) {
       this.activeScreen.handleResize();
     } else if (this.activeScreen) {
-      this.activeScreen.draw(); // Fallback, falls handleResize nicht existiert
+      this.activeScreen.draw(); // Fallback
     }
   }
 
@@ -91,19 +91,25 @@ class ScreenManager {
   }
 
   switchToScreen(screen) {
+    console.log("ScreenManager: switchToScreen", screen.constructor.name);
     if (this.activeScreen && this.activeScreen.removeEventListeners) {
       this.activeScreen.removeEventListeners();
+      console.log(
+        "ScreenManager: removed listeners from",
+        this.activeScreen.constructor.name,
+      );
     }
     this.activeScreen = screen;
     if (typeof this.activeScreen.handleResize === "function") {
-      this.activeScreen.handleResize(); // Initial draw/positioning after switching
+      this.activeScreen.handleResize();
     } else if (
       this.activeScreen &&
       typeof this.activeScreen.draw === "function"
     ) {
       this.activeScreen.draw();
     }
-    this.drawCurrentScreen(); // Zeichne den neuen Bildschirm sofort
+    this.activeScreen.show();
+    this.drawCurrentScreen();
   }
 
   drawCurrentScreen() {
