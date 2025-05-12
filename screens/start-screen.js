@@ -44,6 +44,7 @@ class StartScreen {
 
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick);
   }
 
   removeEventListeners() {
@@ -86,10 +87,28 @@ class StartScreen {
   }
 
   handleClick(event) {
-    console.log("this im StartScreen.handleClick:", this);
+    console.log("handleClick Event:", event.type);
+    let clientX, clientY;
+
+    if (event.type === "touchstart") {
+      // Touch-Ereignis: Koordinaten vom ersten berührenden Finger holen
+      const touch = event.touches[0];
+      clientX = touch.clientX;
+      clientY = touch.clientY;
+      event.preventDefault(); // Verhindert zusätzliche Mausereignisse
+    } else {
+      // Maus-Ereignis: Koordinaten vom Maus-Event holen
+      clientX = event.clientX;
+      clientY = event.clientY;
+    }
+
     const rect = this.canvas.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+    const clickX = clientX - rect.left;
+    const clickY = clientY - rect.top;
+
+    console.log("Klick/Touch X:", clickX, "Y:", clickY);
+    console.log("startButton:", this.startButton);
+    console.log("controlsButton:", this.controlsButton);
 
     if (this.isPointInside(clickX, clickY, this.startButton)) {
       this.removeEventListeners();

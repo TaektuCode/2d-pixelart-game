@@ -21,6 +21,7 @@ function init() {
       musicPlaying = true;
     }
   };
+  bindTouchEvents();
 }
 
 function initializeMuteButton() {
@@ -88,6 +89,41 @@ function keyboardKeyUp(event) {
   else if (event.key === "ArrowDown") keyboard.DOWN = false;
   else if (event.key === " ") keyboard.SPACE = false;
   else if (event.key === "d") keyboard.D = false;
+}
+
+function bindTouchEvents() {
+  const btnLeft = document.getElementById("btnLeft");
+  const btnRight = document.getElementById("btnRight");
+
+  if (btnLeft) {
+    btnLeft.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.LEFT = true;
+    });
+    btnLeft.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.LEFT = false;
+    });
+    btnLeft.addEventListener("touchcancel", (event) => {
+      event.preventDefault();
+      keyboard.LEFT = false;
+    });
+  }
+
+  if (btnRight) {
+    btnRight.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.RIGHT = true;
+    });
+    btnRight.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.RIGHT = false;
+    });
+    btnRight.addEventListener("touchcancel", (event) => {
+      event.preventDefault();
+      keyboard.RIGHT = false;
+    });
+  }
 }
 
 // Neue Funktion zum Anzeigen von Bildschirmen

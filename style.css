@@ -54,6 +54,20 @@ canvas {
   z-index: 10;
 }
 
+#touchControls {
+  display: none;
+}
+
+#btnRight {
+  width: 40px;
+  height: 40px;
+}
+
+#btnLeft {
+  width: 40px;
+  height: 40px;
+}
+
 @media only screen and (max-width: 720px) {
   #gameBox {
     width: 100%;
@@ -66,6 +80,10 @@ canvas {
   h1 {
     display: none;
   }
+
+  #touchControls {
+    display: flex;
+  }
 }
 
 @media only screen and (max-height: 480px) {
@@ -76,11 +94,49 @@ canvas {
   canvas {
     height: 100vh;
     width: 100%;
-    z-index: 10;
   }
 
   h1 {
     display: none;
+  }
+
+  #touchControls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 25px;
+    left: 35px;
+    z-index: 10;
+  }
+
+  #panel1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+  }
+  #btnRight {
+    width: 33px;
+    height: 33px;
+  }
+  #btnLeft {
+    width: 35px;
+    height: 35px;
+  }
+
+  #muteButton {
+    top: 10px;
+    left: 48%;
+    z-index: 10;
+    width: 15px;
+    height: 15px;
+  }
+
+  #muteIcon {
+    z-index: 10;
+    width: 25px;
+    height: 25px;
   }
 }
 
