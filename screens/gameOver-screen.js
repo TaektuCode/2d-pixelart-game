@@ -68,43 +68,32 @@ class GameOverScreen {
   }
 
   draw() {
-    console.log("GameOverScreen.draw() wird ausgeführt");
     this.ctx.clearRect(0, 0, this.width, this.height);
-    console.log("Canvas geleert");
+
     if (this.backgroundImageLoaded) {
       this.ctx.drawImage(this.backgroundImage, 0, 0, this.width, this.height);
-      console.log("Hintergrundbild gezeichnet");
     }
     this.drawText();
-    console.log("Text gezeichnet");
+
     this.drawButtons();
-    console.log("Buttons gezeichnet");
   }
 
   drawText() {
-    console.log("drawText() wird ausgeführt");
-    this.ctx.font = "bold 48px sans-serif";
+    this.ctx.font = "bold 64px OldLondon";
     this.ctx.fillStyle = "red";
     this.ctx.textAlign = "center";
-    this.ctx.shadowColor = "black";
-    this.ctx.shadowBlur = 10;
     this.ctx.fillText("Game Over", this.width / 2, this.height / 4);
     this.ctx.shadowBlur = 0;
   }
 
   drawButtons() {
-    console.log("drawButtons() wird ausgeführt");
     this.drawButton(this.restartButton);
     this.drawButton(this.menuButton);
   }
 
   drawButton(button) {
-    console.log("drawButton() wird ausgeführt für:", button.text);
-    this.ctx.fillStyle = "rgba(0, 153, 255, 0.8)";
+    this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     this.ctx.fillRect(button.x, button.y, button.width, button.height);
-    this.ctx.strokeStyle = "rgba(0, 102, 204, 1)";
-    this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(button.x, button.y, button.width, button.height);
     this.ctx.font = "bold 24px sans-serif";
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "center";
