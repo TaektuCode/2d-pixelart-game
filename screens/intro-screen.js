@@ -13,16 +13,22 @@ class IntroScreen {
     };
 
     this.addEventListeners();
-    this.draw(); // Zeichne initial (zeigt evtl. nur Text, falls Bild noch nicht geladen)
+    this.draw(); // Zeichne initial
+  }
+
+  handleResize() {
+    this.draw(); // Bei Größenänderung neu zeichnen, um Textpositionen anzupassen
   }
 
   addEventListeners() {
     this.boundHandleClick = this.handleClick.bind(this);
     this.canvas.addEventListener("click", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick); // Für Touch-Eingabe
   }
 
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick);
   }
 
   show() {
@@ -42,15 +48,15 @@ class IntroScreen {
         this.canvas.height,
       );
       this.ctx.fillStyle = "white";
-      this.ctx.font = "52px OldLondon";
+      this.ctx.font = `52px OldLondon`;
       this.ctx.textAlign = "center";
       this.ctx.fillText("Story", this.canvas.width / 2, 100);
 
-      this.ctx.font = "28px OldLondon";
+      this.ctx.font = `28px OldLondon`;
       const text =
         "The evil Orc Toran casts a dark shadow. Small rogue Flicker, despite his size, is the only hope to defeat him and save the land.";
-      const maxWidth = this.canvas.width * 0.5; // 80% der Canvas-Breite
-      const lineHeight = 30; // Etwas größer als die Schriftgröße
+      const maxWidth = this.canvas.width * 0.8; // 80% der Canvas-Breite
+      const lineHeight = 30;
       const textY = 200;
 
       this.wrapText(
@@ -62,8 +68,12 @@ class IntroScreen {
         lineHeight,
       );
 
-      this.ctx.font = "bold 24px serif";
-      this.ctx.fillText("START", this.canvas.width / 2, 400);
+      this.ctx.font = `bold 24px serif`;
+      this.ctx.fillText(
+        "START",
+        this.canvas.width / 2,
+        this.canvas.height * 0.8,
+      ); // Position relativ zur Höhe
     } else {
       this.ctx.fillStyle = "black";
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -78,7 +88,7 @@ class IntroScreen {
     }
   }
 
-  handleClick() {
+  handleClick(event) {
     this.removeEventListeners();
     AudioHub.playLoopingSound(AudioHub.STARTSCREEN_MUSIC);
     this.onContinueCallback(); // Wechsel zum StartScreen

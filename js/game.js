@@ -14,6 +14,7 @@ function init() {
   screenManager = new ScreenManager(canvas, startGame);
   window.addEventListener("keydown", keyboardKeyDown);
   window.addEventListener("keyup", keyboardKeyUp);
+  window.addEventListener("resize", resizeCanvas);
   window.onload = () => {
     initializeMuteButton();
     if (!musicPlaying) {
@@ -22,6 +23,24 @@ function init() {
     }
   };
   bindTouchEvents();
+}
+
+function resizeCanvas() {
+  if (gameBox && canvas) {
+    canvas.width = gameBox.offsetWidth;
+    canvas.height = gameBox.offsetHeight;
+    // Informiere den ScreenManager oder die aktiven Screens über die Größenänderung,
+    // damit Button-Positionen und Zeichnungen angepasst werden können.
+    if (
+      screenManager &&
+      screenManager.activeScreen &&
+      typeof screenManager.activeScreen.handleResize === "function"
+    ) {
+      screenManager.activeScreen.handleResize();
+    } else if (screenManager && screenManager.activeScreen) {
+      screenManager.activeScreen.draw(); // Einfacher Redraw als Fallback
+    }
+  }
 }
 
 function initializeMuteButton() {

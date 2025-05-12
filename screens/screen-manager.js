@@ -1,10 +1,16 @@
 class ScreenManager {
-  constructor(canvas, startGameCallback, showGameOverCallback) {
-    // Added showGameOverCallback
+  constructor(
+    canvas,
+    startGameCallback,
+    showGameOverCallback,
+    showWinScreenCallback,
+  ) {
+    // Optional: showWinScreenCallback hinzufügen, falls noch nicht vorhanden
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.startGameCallback = startGameCallback;
-    this.showGameOverCallback = showGameOverCallback; // Store the new callback
+    this.showGameOverCallback = showGameOverCallback;
+    this.showWinScreenCallback = showWinScreenCallback; // Store the new callback
     this.introScreen = new IntroScreen(canvas, this.showStartScreen.bind(this));
     this.startScreen = new StartScreen(
       canvas,
@@ -30,6 +36,9 @@ class ScreenManager {
     this.drawCurrentScreen();
     this.isRunning = true;
     this.drawLoop();
+
+    // Event Listener für Fenstergrößenänderungen hinzufügen
+    window.addEventListener("resize", this.handleResize.bind(this));
   }
 
   drawLoop() {
@@ -38,6 +47,17 @@ class ScreenManager {
         this.activeScreen.draw();
       }
     }, 1000 / 60); // Beispiel-FPS
+  }
+
+  handleResize() {
+    if (
+      this.activeScreen &&
+      typeof this.activeScreen.handleResize === "function"
+    ) {
+      this.activeScreen.handleResize();
+    } else if (this.activeScreen) {
+      this.activeScreen.draw(); // Fallback, falls handleResize nicht existiert
+    }
   }
 
   showIntroScreen() {
@@ -75,14 +95,13 @@ class ScreenManager {
       this.activeScreen.removeEventListeners();
     }
     this.activeScreen = screen;
-    if (screen === this.gameOverScreen) {
-      this.isRunning = false; // Stoppe den Haupt-Draw-Loop
-    } else {
-      this.isRunning = true; // Starte ihn wieder für andere Bildschirme
-    }
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    if (this.activeScreen && this.activeScreen.show) {
-      this.activeScreen.show();
+    if (typeof this.activeScreen.handleResize === "function") {
+      this.activeScreen.handleResize(); // Initial draw/positioning after switching
+    } else if (
+      this.activeScreen &&
+      typeof this.activeScreen.draw === "function"
+    ) {
+      this.activeScreen.draw();
     }
     this.drawCurrentScreen(); // Zeichne den neuen Bildschirm sofort
   }

@@ -16,14 +16,14 @@ class ControlScreen {
     this.backgroundImage = new Image();
     this.backgroundImage.src = "assets/img/ui/menu_bg.png"; // Pfad zum Hintergrundbild
     this.backgroundImageLoaded = false;
-    this.backButton = { x: 0, y: 100, width: 0, height: 0, label: "Back" }; // Dummy
+    this.backButton = { x: 0, y: 0, width: 0, height: 0, label: "Back" };
     this.startGameButton = {
       x: 0,
       y: 0,
       width: 0,
       height: 0,
       label: "Start Game",
-    }; // Start Game Button
+    };
     this.setBindings();
     this.addEventListeners();
 
@@ -34,16 +34,22 @@ class ControlScreen {
     this.draw();
   }
 
+  handleResize() {
+    this.draw(); // Bei Größenänderung neu zeichnen, um Button-Positionen und Text anzupassen
+  }
+
   setBindings() {
     this.boundHandleClick = this.handleClick.bind(this);
   }
 
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick); // Für Touch-Eingabe
   }
 
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick);
   }
 
   show() {
@@ -63,12 +69,12 @@ class ControlScreen {
       );
       const buttonWidth = 200;
       const buttonHeight = 50;
-      const buttonSpacing = 20; // Abstand zwischen den Buttons
+      const buttonSpacing = 20;
 
       // Berechne die Startposition für die Buttons, um sie horizontal zu zentrieren
       const totalButtonWidth = 2 * buttonWidth + buttonSpacing;
       const startX = (this.canvas.width - totalButtonWidth) / 2;
-      const buttonY = this.canvas.height - buttonHeight - 75; // Beibehale die Y-Position
+      const buttonY = this.canvas.height - buttonHeight - 75;
 
       this.backButton = {
         label: "Back",
@@ -127,16 +133,9 @@ class ControlScreen {
       "Spacebar: Jump",
       "D: Attack",
     ];
-    let maxWidth = 0;
-    textLines.forEach((line) => {
-      const width = this.ctx.measureText(line).width;
-      if (width > maxWidth) {
-        maxWidth = width;
-      }
-    });
 
     const startX = this.canvas.width / 2;
-    let startY = this.canvas.height / 2 - (textLines.length * 30) / 2 - 50; // Adjusted position
+    let startY = this.canvas.height / 2 - (textLines.length * 30) / 2 - 50;
     const lineHeight = 30;
 
     textLines.forEach((line) => {
@@ -147,15 +146,22 @@ class ControlScreen {
 
   handleClick(event) {
     const rect = this.canvas.getBoundingClientRect();
-    const clickX = event.clientX - rect.left;
-    const clickY = event.clientY - rect.top;
+    let clickX = event.clientX - rect.left; // Verwende let
+    let clickY = event.clientY - rect.top; // Verwende let
+
+    if (event.type === "touchstart") {
+      const touch = event.touches[0];
+      clickX = touch.clientX - rect.left;
+      clickY = touch.clientY - rect.top;
+      event.preventDefault();
+    }
 
     if (this.isPointInside(clickX, clickY, this.backButton)) {
       this.removeEventListeners();
       this.showStartScreenCallback();
     } else if (this.isPointInside(clickX, clickY, this.startGameButton)) {
       this.removeEventListeners();
-      AudioHub.stopStartScreenMusic(); // Stoppe die Hintergrundmusik
+      AudioHub.stopStartScreenMusic();
       this.startGameCallback();
     }
   }
