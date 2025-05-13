@@ -113,6 +113,8 @@ function keyboardKeyUp(event) {
 function bindTouchEvents() {
   const btnLeft = document.getElementById("btnLeft");
   const btnRight = document.getElementById("btnRight");
+  const btnJump = document.getElementById("btnJump");
+  const btnThrow = document.getElementById("btnThrow");
 
   if (btnLeft) {
     btnLeft.addEventListener("touchstart", (event) => {
@@ -141,6 +143,36 @@ function bindTouchEvents() {
     btnRight.addEventListener("touchcancel", (event) => {
       event.preventDefault();
       keyboard.RIGHT = false;
+    });
+  }
+
+  if (btnJump) {
+    btnJump.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.SPACE = true;
+    });
+    btnJump.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.SPACE = false;
+    });
+    btnJump.addEventListener("touchcancel", (event) => {
+      event.preventDefault();
+      keyboard.SPACE = false;
+    });
+  }
+
+  if (btnThrow) {
+    btnThrow.addEventListener("touchstart", (event) => {
+      event.preventDefault();
+      keyboard.D = true;
+    });
+    btnThrow.addEventListener("touchend", (event) => {
+      event.preventDefault();
+      keyboard.D = false;
+    });
+    btnThrow.addEventListener("touchcancel", (event) => {
+      event.preventDefault();
+      keyboard.D = false;
     });
   }
 }
