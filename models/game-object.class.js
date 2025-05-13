@@ -33,19 +33,26 @@ class GameObject extends DrawableObject {
   }
 
   isColliding(go) {
-    let charLeft = this.x + this.offset.left;
-    let charRight = this.x + this.width - this.offset.right;
-    let charTop = this.y + this.offset.top;
-    let charBottom = this.y + this.height - this.offset.bottom;
-    let goLeft = go.x + go.offset.left;
-    let goRight = go.x + go.width - go.offset.right;
-    let goTop = go.y + go.offset.top;
-    let goBottom = go.y + go.height - go.offset.bottom;
+    const charCoords = this.getCollisionCoordinates();
+    const goCoords = go.getCollisionCoordinates();
+    return this.checkCollision(charCoords, goCoords);
+  }
+
+  getCollisionCoordinates() {
+    return {
+      left: this.x + this.offset.left,
+      right: this.x + this.width - this.offset.right,
+      top: this.y + this.offset.top,
+      bottom: this.y + this.height - this.offset.bottom,
+    };
+  }
+
+  checkCollision(char, other) {
     return (
-      charRight > goLeft &&
-      charBottom > goTop &&
-      charLeft < goRight &&
-      charTop < goBottom
+      char.right > other.left &&
+      char.bottom > other.top &&
+      char.left < other.right &&
+      char.top < other.bottom
     );
   }
 

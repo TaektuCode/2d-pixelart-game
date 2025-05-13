@@ -19,6 +19,12 @@ class StatusBarCollectables extends DrawableObject {
   }
 
   draw(ctx) {
+    this.drawBackgroundBar(ctx);
+    this.drawCollectableIcons(ctx);
+    this.drawCollectableCount(ctx);
+  }
+
+  drawBackgroundBar(ctx) {
     if (this.imageCache[this.IMAGE_BAR[0]]) {
       ctx.drawImage(
         this.imageCache[this.IMAGE_BAR[0]],
@@ -28,39 +34,58 @@ class StatusBarCollectables extends DrawableObject {
         this.height,
       );
     }
+  }
 
+  drawCollectableIcons(ctx) {
     if (this.imageCache[this.IMAGE_POINT[0]]) {
       const iconWidth = 25;
       const iconHeight = 15;
       const spacing = 3;
       const startX = this.x + 17;
       const startY = this.y + (this.height - iconHeight) / 2;
-      const maxPointsToShow = 6; // Begrenze die Anzahl der angezeigten Icons
-
-      for (
-        let i = 0;
-        i < Math.min(this.collectableCount, maxPointsToShow);
-        i++
-      ) {
-        const iconX = startX + i * (iconWidth + spacing);
-        ctx.drawImage(
-          this.imageCache[this.IMAGE_POINT[0]],
-          iconX,
-          startY,
-          iconWidth,
-          iconHeight,
-        );
-      }
-
-      ctx.font = "16px sans-serif";
-      ctx.fillStyle = "white";
-      ctx.textAlign = "right";
-      ctx.fillText(
-        `${this.collectableCount}`,
-        this.x + this.width - 25,
-        this.y + 20,
+      const maxPointsToShow = 6;
+      this.renderCollectableIcons(
+        ctx,
+        startX,
+        startY,
+        iconWidth,
+        iconHeight,
+        spacing,
+        maxPointsToShow,
       );
-      ctx.textAlign = "start";
     }
+  }
+
+  renderCollectableIcons(
+    ctx,
+    startX,
+    startY,
+    iconWidth,
+    iconHeight,
+    spacing,
+    maxPointsToShow,
+  ) {
+    for (let i = 0; i < Math.min(this.collectableCount, maxPointsToShow); i++) {
+      const iconX = startX + i * (iconWidth + spacing);
+      ctx.drawImage(
+        this.imageCache[this.IMAGE_POINT[0]],
+        iconX,
+        startY,
+        iconWidth,
+        iconHeight,
+      );
+    }
+  }
+
+  drawCollectableCount(ctx) {
+    ctx.font = "16px sans-serif";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "right";
+    ctx.fillText(
+      `${this.collectableCount}`,
+      this.x + this.width - 25,
+      this.y + 20,
+    );
+    ctx.textAlign = "start";
   }
 }

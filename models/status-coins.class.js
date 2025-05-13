@@ -18,21 +18,28 @@ class StatusCoins extends DrawableObject {
 
   draw(ctx) {
     if (this.imageCache[this.IMAGE_COIN[0]]) {
-      ctx.font = "16px sans-serif";
-      ctx.fillStyle = "white";
-      ctx.fillText(
-        `${this.collectedCoins}   x`,
-        this.x,
-        this.y + this.height / 2 + 5,
-      );
-
-      ctx.drawImage(
-        this.imageCache[this.IMAGE_COIN[0]],
-        this.x + this.width + 10,
-        this.y,
-        this.width,
-        this.height,
-      );
+      this.drawCoinCountText(ctx);
+      this.drawCoinIcon(ctx);
     }
+  }
+
+  drawCoinCountText(ctx) {
+    ctx.font = "16px sans-serif";
+    ctx.fillStyle = "white";
+    ctx.fillText(
+      `${this.collectedCoins}   x`,
+      this.x,
+      this.y + this.height / 2 + 5,
+    );
+  }
+
+  drawCoinIcon(ctx) {
+    ctx.drawImage(
+      this.imageCache[this.IMAGE_COIN[0]],
+      this.x + this.width + 10,
+      this.y,
+      this.width,
+      this.height,
+    );
   }
 }
