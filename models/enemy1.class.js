@@ -58,12 +58,12 @@ class Enemy1 extends GameObject {
   /**
    * Creates a new Enemy1 instance.
    */
-  constructor() {
+  constructor(x) {
     super();
     this.loadImage("assets/img/enemy1/walk/Walk1_flip.png");
     this.loadImages(this.IMAGES_WALKING);
 
-    this.x = 200 + Math.random() * 500;
+    this.x = x;
     this.speed = 0.15 + Math.random() * 0.5;
     this.animate();
   }

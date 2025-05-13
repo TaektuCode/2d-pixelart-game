@@ -184,26 +184,4 @@ class GameObject extends DrawableObject {
   jump() {
     this.speedY = 30;
   }
-
-  /**
-   * Draws the collision box of the game object for debugging purposes.
-   * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
-   */
-  drawCollisionBox(ctx) {
-    ctx.strokeStyle = "lime";
-    ctx.lineWidth = 3;
-    let x = this.x + this.offset.left;
-    let width = this.width - this.offset.left - this.offset.right;
-
-    if (this.otherDirection) {
-      x = this.x + this.offset.right;
-    }
-
-    ctx.strokeRect(
-      x,
-      this.y + this.offset.top,
-      width,
-      this.height - this.offset.top - this.offset.bottom,
-    );
-  }
 }

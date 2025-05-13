@@ -11,12 +11,14 @@ function buildLevel1() {
   return new Level(
     [new Endboss()],
     [
-      new Enemy1(),
-      new Enemy1(),
-      new Enemy1(),
-      new Enemy2(),
-      new Enemy2(),
-      new Enemy2(),
+      new Enemy1(500),
+      new Enemy1(800),
+      new Enemy1(1100),
+      new Enemy1(1400),
+      new Enemy2(650),
+      new Enemy2(950),
+      new Enemy2(1250),
+      new Enemy2(1550),
     ],
     [
       new Cloud("assets/img/clouds/clouds2.png", 0),

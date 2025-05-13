@@ -696,17 +696,6 @@ class World {
   addToMap(go) {
     if (go instanceof DrawableObject) {
       go.draw(this.ctx);
-      if (
-        go instanceof MainCharacter ||
-        go instanceof Enemy1 ||
-        go instanceof Enemy2 ||
-        go instanceof Endboss ||
-        go instanceof CollectableObjects ||
-        go instanceof CollectableStone ||
-        go instanceof ThrowableObject
-      ) {
-        go.drawCollisionBox(this.ctx);
-      }
     }
   }
 }
