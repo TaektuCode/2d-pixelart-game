@@ -44,19 +44,28 @@ function resizeCanvas() {
 
 function initializeMuteButton() {
   const muteButton = document.getElementById("muteButton");
+  if (muteButton) {
+    setupMuteState();
+    muteButton.addEventListener("click", toggleMute);
+  }
+}
+
+function setupMuteState() {
+  const isMusicOff = localStorage.getItem("musicOn") === "false";
+  AudioHub.isMuted = isMusicOff;
+  updateMuteButtonIcon(AudioHub.isMuted);
+}
+
+function toggleMute() {
+  AudioHub.isMuted = !AudioHub.isMuted;
+  AudioHub.muteAll(AudioHub.isMuted);
+  localStorage.setItem("musicOn", !AudioHub.isMuted);
+  updateMuteButtonIcon(AudioHub.isMuted);
+}
+
+function updateMuteButtonIcon(isMuted) {
   const muteIcon = document.getElementById("muteIcon");
-  let isMuted = localStorage.getItem("musicOn") === "false";
-  AudioHub.isMuted = isMuted;
-  updateMuteButtonIcon();
-
-  muteButton.addEventListener("click", () => {
-    isMuted = !isMuted;
-    AudioHub.muteAll(isMuted);
-    localStorage.setItem("musicOn", !isMuted);
-    updateMuteButtonIcon();
-  });
-
-  function updateMuteButtonIcon() {
+  if (muteIcon) {
     muteIcon.src = isMuted
       ? "assets/img/ui/volume-mute.png"
       : "assets/img/ui/volume.png";
@@ -108,70 +117,53 @@ function keyboardKeyUp(event) {
 }
 
 function bindTouchEvents() {
+  bindLeftButtonEvents();
+  bindRightButtonEvents();
+  bindJumpButtonEvents();
+  bindThrowButtonEvents();
+}
+
+function bindLeftButtonEvents() {
   const btnLeft = document.getElementById("btnLeft");
-  const btnRight = document.getElementById("btnRight");
-  const btnJump = document.getElementById("btnJump");
-  const btnThrow = document.getElementById("btnThrow");
-
   if (btnLeft) {
-    btnLeft.addEventListener("touchstart", (event) => {
-      event.preventDefault();
-      keyboard.LEFT = true;
-    });
-    btnLeft.addEventListener("touchend", (event) => {
-      event.preventDefault();
-      keyboard.LEFT = false;
-    });
-    btnLeft.addEventListener("touchcancel", (event) => {
-      event.preventDefault();
-      keyboard.LEFT = false;
-    });
+    addTouchListener(btnLeft, "touchstart", () => (keyboard.LEFT = true));
+    addTouchListener(btnLeft, "touchend", () => (keyboard.LEFT = false));
+    addTouchListener(btnLeft, "touchcancel", () => (keyboard.LEFT = false));
   }
+}
 
+function bindRightButtonEvents() {
+  const btnRight = document.getElementById("btnRight");
   if (btnRight) {
-    btnRight.addEventListener("touchstart", (event) => {
-      event.preventDefault();
-      keyboard.RIGHT = true;
-    });
-    btnRight.addEventListener("touchend", (event) => {
-      event.preventDefault();
-      keyboard.RIGHT = false;
-    });
-    btnRight.addEventListener("touchcancel", (event) => {
-      event.preventDefault();
-      keyboard.RIGHT = false;
-    });
+    addTouchListener(btnRight, "touchstart", () => (keyboard.RIGHT = true));
+    addTouchListener(btnRight, "touchend", () => (keyboard.RIGHT = false));
+    addTouchListener(btnRight, "touchcancel", () => (keyboard.RIGHT = false));
   }
+}
 
+function bindJumpButtonEvents() {
+  const btnJump = document.getElementById("btnJump");
   if (btnJump) {
-    btnJump.addEventListener("touchstart", (event) => {
-      event.preventDefault();
-      keyboard.SPACE = true;
-    });
-    btnJump.addEventListener("touchend", (event) => {
-      event.preventDefault();
-      keyboard.SPACE = false;
-    });
-    btnJump.addEventListener("touchcancel", (event) => {
-      event.preventDefault();
-      keyboard.SPACE = false;
-    });
+    addTouchListener(btnJump, "touchstart", () => (keyboard.SPACE = true));
+    addTouchListener(btnJump, "touchend", () => (keyboard.SPACE = false));
+    addTouchListener(btnJump, "touchcancel", () => (keyboard.SPACE = false));
   }
+}
 
+function bindThrowButtonEvents() {
+  const btnThrow = document.getElementById("btnThrow");
   if (btnThrow) {
-    btnThrow.addEventListener("touchstart", (event) => {
-      event.preventDefault();
-      keyboard.D = true;
-    });
-    btnThrow.addEventListener("touchend", (event) => {
-      event.preventDefault();
-      keyboard.D = false;
-    });
-    btnThrow.addEventListener("touchcancel", (event) => {
-      event.preventDefault();
-      keyboard.D = false;
-    });
+    addTouchListener(btnThrow, "touchstart", () => (keyboard.D = true));
+    addTouchListener(btnThrow, "touchend", () => (keyboard.D = false));
+    addTouchListener(btnThrow, "touchcancel", () => (keyboard.D = false));
   }
+}
+
+function addTouchListener(element, eventType, callback) {
+  element.addEventListener(eventType, (event) => {
+    event.preventDefault();
+    callback();
+  });
 }
 
 function showScreen(screenName) {
