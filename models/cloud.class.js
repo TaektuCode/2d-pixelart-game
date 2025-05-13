@@ -41,6 +41,8 @@ class Cloud extends GameObject {
    * Initiates the animation of the cloud, which is moving to the left.
    */
   animate() {
-    this.moveLeft();
+    setInterval(() => {
+      this.moveLeft();
+    }, 1000 / 60);
   }
 }

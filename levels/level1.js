@@ -21,6 +21,12 @@ function buildLevel1() {
     [
       new Cloud("assets/img/clouds/clouds2.png", 0),
       new Cloud("assets/img/clouds/clouds2.png", 720),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 2),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 3),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 4),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 5),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 6),
+      new Cloud("assets/img/clouds/clouds2.png", 720 * 7),
     ],
     [
       new BackgroundObject("assets/img/background/sky.png", -720, 0),
