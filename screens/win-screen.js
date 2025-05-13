@@ -1,9 +1,9 @@
 class WinScreen {
-  constructor(canvas, playAgainCallback, closeGameCallback) {
+  constructor(canvas, playAgainCallback, menuCallback) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.playAgainCallback = playAgainCallback;
-    this.closeGameCallback = closeGameCallback;
+    this.menuCallback = menuCallback;
     this.width = canvas.width;
     this.height = canvas.height;
     this.backgroundImage = new Image();
@@ -16,12 +16,12 @@ class WinScreen {
       height: 50,
       text: "Play Again",
     };
-    this.closeGameButton = {
+    this.menuButton = {
       x: this.width / 2 - 150,
       y: this.height / 2 + 60,
       width: 300,
       height: 50,
-      text: "Close Game",
+      text: "Back to Menu",
     };
     this.setBindings();
     this.addEventListeners();
@@ -38,23 +38,33 @@ class WinScreen {
 
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick); // Für Touch-Eingabe
   }
 
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick); // Auch Touch-Listener entfernen
   }
 
   handleClick(event) {
     const rect = this.canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    let x, y;
+
+    if (event.type === "touchstart") {
+      x = event.touches[0].clientX - rect.left;
+      y = event.touches[0].clientY - rect.top + 50;
+      event.preventDefault(); // Verhindert möglicherweise unerwünschtes Scrollen/Zoomen
+    } else {
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+    }
 
     if (this.isPointInside(x, y, this.playAgainButton)) {
       this.removeEventListeners();
       this.playAgainCallback();
-    } else if (this.isPointInside(x, y, this.closeGameButton)) {
+    } else if (this.isPointInside(x, y, this.menuButton)) {
       this.removeEventListeners();
-      //   this.closeGameCallback();
+      this.menuCallback();
     }
   }
 
@@ -88,7 +98,7 @@ class WinScreen {
 
   drawButtons() {
     this.drawButton(this.playAgainButton);
-    this.drawButton(this.closeGameButton);
+    this.drawButton(this.menuButton);
   }
 
   drawButton(button) {

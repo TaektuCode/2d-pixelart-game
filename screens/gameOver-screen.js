@@ -38,16 +38,26 @@ class GameOverScreen {
 
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
+    this.canvas.addEventListener("touchstart", this.boundHandleClick); // Für Touch-Eingabe
   }
 
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick); // Auch Touch-Listener entfernen
   }
 
   handleClick(event) {
     const rect = this.canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    let x, y;
+
+    if (event.type === "touchstart") {
+      x = event.touches[0].clientX - rect.left;
+      y = event.touches[0].clientY - rect.top + 50;
+      event.preventDefault();
+    } else {
+      x = event.clientX - rect.left;
+      y = event.clientY - rect.top;
+    }
 
     if (this.isPointInside(x, y, this.restartButton)) {
       this.removeEventListeners();

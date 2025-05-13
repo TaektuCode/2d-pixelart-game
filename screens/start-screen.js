@@ -18,7 +18,7 @@ class StartScreen {
     this.backgroundImageLoaded = false;
     this.startButton = {
       // Oben
-      label: "Start Game",
+      label: "Control",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2 - 75,
       width: 200,
@@ -26,7 +26,7 @@ class StartScreen {
     };
     this.controlsButton = {
       // Unten
-      label: "Controls",
+      label: "Start Game",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2,
       width: 200,
@@ -34,10 +34,10 @@ class StartScreen {
     };
     this.imprintButton = {
       label: "Imprint",
-      x: canvas.width / 2 - 110, // Gleiche x-Koordinate wie die anderen
-      y: canvas.height / 2 + 75, // Unterhalb des Controls-Buttons
-      width: 200,
-      height: 50,
+      x: 25,
+      y: 75, // Unterhalb des Controls-Buttons
+      width: 80,
+      height: 30,
     };
     this.setBindings();
     this.addEventListeners();
@@ -53,9 +53,7 @@ class StartScreen {
     this.startButton.y = this.canvas.height / 2 - 100;
     this.controlsButton.x = this.canvas.width / 2 - 110;
     this.controlsButton.y = this.canvas.height / 2;
-    this.imprintButton.x = this.canvas.width / 2 - 110;
-    this.imprintButton.y = this.canvas.height / 2 + 75;
-    this.draw();
+    (this.imprintButton.x = 25), (this.imprintButton.y = 25), this.draw();
   }
 
   setBindings() {
@@ -96,15 +94,21 @@ class StartScreen {
   }
 
   drawButton(button) {
-    this.ctx.strokeStyle = "red"; // Temporäre rote Umrandung
     this.ctx.lineWidth = 2;
-    this.ctx.strokeRect(button.x, button.y, button.width, button.height);
 
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     this.ctx.fillRect(button.x, button.y, button.width, button.height);
-    this.ctx.font = "24px sans-serif";
+
+    // Schriftgröße für den Impressum-Button anpassen
+    if (button === this.imprintButton) {
+      this.ctx.font = "bold 14px sans-serif";
+    } else {
+      this.ctx.font = "24px sans-serif";
+    }
+
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "center";
+    this.ctx.textBaseline = "middle";
     this.ctx.fillText(
       button.label,
       button.x + button.width / 2,
@@ -119,7 +123,7 @@ class StartScreen {
 
     if (event.type === "touchstart") {
       clickX = event.touches[0].clientX - rect.left;
-      clickY = event.touches[0].clientY - rect.top;
+      clickY = event.touches[0].clientY - rect.top + 50;
       event.preventDefault();
     } else {
       clickX = event.clientX - rect.left;
@@ -132,11 +136,11 @@ class StartScreen {
 
     if (this.isPointInside(clickX, clickY, this.controlsButton)) {
       this.removeEventListeners();
-      this.showControlsCallback();
-    } else if (this.isPointInside(clickX, clickY, this.startButton)) {
-      this.removeEventListeners();
       AudioHub.stopStartScreenMusic();
       this.startGameCallback();
+    } else if (this.isPointInside(clickX, clickY, this.startButton)) {
+      this.removeEventListeners();
+      this.showControlsCallback();
     } else if (this.isPointInside(clickX, clickY, this.imprintButton)) {
       window.location.href = "imprint.html";
     }

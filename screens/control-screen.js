@@ -153,7 +153,7 @@ class ControlScreen {
     if (event.type === "touchstart") {
       const touch = event.changedTouches[0];
       clickX = touch.clientX - rect.left;
-      clickY = touch.clientY - rect.top;
+      clickY = touch.clientY - rect.top + 75;
       event.preventDefault();
     }
 
