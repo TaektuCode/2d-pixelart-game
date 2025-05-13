@@ -1,3 +1,12 @@
+/**
+ * @file Defines the function to build the first level of the game, including
+ * enemies, clouds, background objects, collectables, and the end boss.
+ */
+
+/**
+ * Builds and returns the first level of the game.
+ * @returns {Level} The constructed level object.
+ */
 function buildLevel1() {
   return new Level(
     [new Endboss()],
@@ -14,7 +23,7 @@ function buildLevel1() {
       new Cloud("assets/img/clouds/clouds2.png", 720),
     ],
     [
-      new BackgroundObject("assets/img/background/sky.png", -720, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", -720, 0),
       new BackgroundObject("assets/img/background/rocks.png", -720, 0),
       new BackgroundObject("assets/img/background/rocks2.png", -720, 0),
       new BackgroundObject("assets/img/background/rocks3.png", -720, 0),
@@ -23,17 +32,17 @@ function buildLevel1() {
         -720,
         340,
       ),
-      new BackgroundObject("assets/img/background/sky.png", 0, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", 0, 0),
       new BackgroundObject("assets/img/background/rocks.png", 0, 0),
       new BackgroundObject("assets/img/background/rocks2.png", 0, 0),
       new BackgroundObject("assets/img/background/rocks3.png", 0, 0),
       new BackgroundObject("assets/img/background/ground_tile07.png", 0, 340),
-      new BackgroundObject("assets/img/background/sky.png", 720, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", 720, 0),
       new BackgroundObject("assets/img/background/rocks.png", 720, 0),
       new BackgroundObject("assets/img/background/rocks2.png", 720, 0),
       new BackgroundObject("assets/img/background/rocks3.png", 720, 0),
       new BackgroundObject("assets/img/background/ground_tile07.png", 720, 340),
-      new BackgroundObject("assets/img/background/sky.png", 720 * 2, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", 720 * 2, 0),
       new BackgroundObject("assets/img/background/rocks.png", 720 * 2, 0),
       new BackgroundObject("assets/img/background/rocks2.png", 720 * 2, 0),
       new BackgroundObject("assets/img/background/rocks3.png", 720 * 2, 0),
@@ -42,7 +51,7 @@ function buildLevel1() {
         720 * 2,
         340,
       ),
-      new BackgroundObject("assets/img/background/sky.png", 720 * 3, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", 720 * 3, 0),
       new BackgroundObject("assets/img/background/rocks.png", 720 * 3, 0),
       new BackgroundObject("assets/img/background/rocks2.png", 720 * 3, 0),
       new BackgroundObject("assets/img/background/rocks3.png", 720 * 3, 0),
@@ -51,7 +60,7 @@ function buildLevel1() {
         720 * 3,
         340,
       ),
-      new BackgroundObject("assets/img/background/sky.png", 720 * 4, 0), // path, x,
+      new BackgroundObject("assets/img/background/sky.png", 720 * 4, 0),
       new BackgroundObject("assets/img/background/rocks.png", 720 * 4, 0),
       new BackgroundObject("assets/img/background/rocks2.png", 720 * 4, 0),
       new BackgroundObject("assets/img/background/rocks3.png", 720 * 4, 0),

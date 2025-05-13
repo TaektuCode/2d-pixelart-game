@@ -1,11 +1,37 @@
+/**
+ * @file Defines the StatusBarEndboss class, which represents the visual
+ * status bar for displaying the health of the end boss. It extends the
+ * DrawableObject class and handles drawing the background bar and health icons
+ * based on the current health percentage.
+ */
+
+/**
+ * Represents the status bar for the end boss's health.
+ * Extends the {@link DrawableObject} class.
+ */
 class StatusBarEndboss extends DrawableObject {
+  /**
+   * Array containing the path to the background bar image.
+   * @type {string[]}
+   */
   IMAGE_BAR = [
     "assets/img/statusbars/enboss_health/stamina-energy-magic_bar_full.png",
   ];
+  /**
+   * Array containing the path to the health point icon image.
+   * @type {string[]}
+   */
   IMAGE_HP = ["assets/img/statusbars/enboss_health/stamina_point.png"];
 
+  /**
+   * The current health percentage of the end boss (0-100).
+   * @type {number}
+   */
   percentage = 100;
 
+  /**
+   * Creates a new StatusBarEndboss instance.
+   */
   constructor() {
     super();
     this.loadImages(this.IMAGE_BAR);
@@ -15,15 +41,28 @@ class StatusBarEndboss extends DrawableObject {
     this.width = 200;
     this.height = 40;
   }
+
+  /**
+   * Sets the current health percentage of the end boss.
+   * @param {number} percentage - The new health percentage (0-100).
+   */
   setPercentage(percentage) {
     this.percentage = percentage;
   }
 
+  /**
+   * Draws the end boss's health status bar, including the background and health icons.
+   * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+   */
   draw(ctx) {
     this.drawHpBarBackground(ctx);
     this.drawHpIcons(ctx);
   }
 
+  /**
+   * Draws the background bar of the health status bar.
+   * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+   */
   drawHpBarBackground(ctx) {
     if (this.imageCache[this.IMAGE_BAR[0]]) {
       ctx.drawImage(
@@ -36,6 +75,10 @@ class StatusBarEndboss extends DrawableObject {
     }
   }
 
+  /**
+   * Draws the health point icons based on the current health percentage.
+   * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+   */
   drawHpIcons(ctx) {
     if (this.imageCache[this.IMAGE_HP[0]]) {
       const hpPointsToShow = this.calculateHpPointsToShow();
@@ -54,10 +97,23 @@ class StatusBarEndboss extends DrawableObject {
     }
   }
 
+  /**
+   * Calculates the number of health point icons to display based on the current percentage.
+   * @returns {number} The number of health point icons to show.
+   */
   calculateHpPointsToShow() {
     return Math.max(0, Math.ceil(this.percentage / 10));
   }
 
+  /**
+   * Renders the individual health point icons.
+   * @param {CanvasRenderingContext2D} ctx - The 2D rendering context of the canvas.
+   * @param {number} startX - The starting x-coordinate for the first icon.
+   * @param {number} startY - The starting y-coordinate for the icons.
+   * @param {number} hpPointWidth - The width of each health point icon.
+   * @param {number} spacing - The horizontal space between icons.
+   * @param {number} hpPointsToShow - The number of health point icons to display.
+   */
   renderHpIcons(ctx, startX, startY, hpPointWidth, spacing, hpPointsToShow) {
     for (let i = 0; i < hpPointsToShow; i++) {
       const hpPointX = startX + i * (hpPointWidth + spacing);

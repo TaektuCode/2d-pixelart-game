@@ -1,3 +1,8 @@
+/**
+ * @file Initializes the game, handles keyboard and touch events, manages game states,
+ * and controls screen transitions.
+ */
+
 let canvas;
 let world;
 let keyboard = new Keyboard();
@@ -9,6 +14,10 @@ let musicPlaying = false;
 const muteButton = document.getElementById("muteButton");
 const muteIcon = document.getElementById("muteIcon");
 
+/**
+ * Initializes the game by setting up the canvas, screen manager, event listeners,
+ * and initial music.
+ */
 function init() {
   canvas = document.getElementById("canvas");
   screenManager = new ScreenManager(canvas, startGame);
@@ -25,6 +34,9 @@ function init() {
   bindTouchEvents();
 }
 
+/**
+ * Handles resizing of the canvas and updates the active screen if necessary.
+ */
 function resizeCanvas() {
   if (gameBox && canvas) {
     canvas.width = gameBox.offsetWidth;
@@ -42,6 +54,9 @@ function resizeCanvas() {
   }
 }
 
+/**
+ * Initializes the mute button functionality.
+ */
 function initializeMuteButton() {
   const muteButton = document.getElementById("muteButton");
   if (muteButton) {
@@ -50,12 +65,18 @@ function initializeMuteButton() {
   }
 }
 
+/**
+ * Sets up the initial mute state based on local storage.
+ */
 function setupMuteState() {
   const isMusicOff = localStorage.getItem("musicOn") === "false";
   AudioHub.isMuted = isMusicOff;
   updateMuteButtonIcon(AudioHub.isMuted);
 }
 
+/**
+ * Toggles the mute state and updates local storage and the button icon.
+ */
 function toggleMute() {
   AudioHub.isMuted = !AudioHub.isMuted;
   AudioHub.muteAll(AudioHub.isMuted);
@@ -63,6 +84,10 @@ function toggleMute() {
   updateMuteButtonIcon(AudioHub.isMuted);
 }
 
+/**
+ * Updates the mute button icon based on the current mute state.
+ * @param {boolean} isMuted - The current mute state.
+ */
 function updateMuteButtonIcon(isMuted) {
   const muteIcon = document.getElementById("muteIcon");
   if (muteIcon) {
@@ -72,10 +97,16 @@ function updateMuteButtonIcon(isMuted) {
   }
 }
 
+/**
+ * Clears all active intervals in the window.
+ */
 function clearAllIntervals() {
   for (let i = 1; i < 9999; i++) window.clearInterval(i);
 }
 
+/**
+ * Handles the game over state, stopping all sounds and showing the game over screen.
+ */
 function gameOver() {
   AudioHub.stopAllSounds();
   gameIsOver = true;
@@ -83,6 +114,9 @@ function gameOver() {
   clearAllIntervals();
 }
 
+/**
+ * Handles the game won state, stopping all sounds and showing the game won screen.
+ */
 function gameWon() {
   AudioHub.stopAllSounds();
   gameIsOver = true;
@@ -90,6 +124,10 @@ function gameWon() {
   clearAllIntervals();
 }
 
+/**
+ * Starts the game by resetting game state, clearing intervals, building the level,
+ * creating the world, and running it.
+ */
 function startGame() {
   gameIsOver = false;
   clearAllIntervals();
@@ -98,6 +136,10 @@ function startGame() {
   world.run();
 }
 
+/**
+ * Handles keydown events and updates the keyboard state.
+ * @param {KeyboardEvent} event - The keydown event.
+ */
 function keyboardKeyDown(event) {
   if (event.key === "ArrowLeft") keyboard.LEFT = true;
   else if (event.key === "ArrowRight") keyboard.RIGHT = true;
@@ -107,6 +149,10 @@ function keyboardKeyDown(event) {
   else if (event.key === "d") keyboard.D = true;
 }
 
+/**
+ * Handles keyup events and updates the keyboard state.
+ * @param {KeyboardEvent} event - The keyup event.
+ */
 function keyboardKeyUp(event) {
   if (event.key === "ArrowLeft") keyboard.LEFT = false;
   else if (event.key === "ArrowRight") keyboard.RIGHT = false;
@@ -116,6 +162,9 @@ function keyboardKeyUp(event) {
   else if (event.key === "d") keyboard.D = false;
 }
 
+/**
+ * Binds touch events to virtual buttons.
+ */
 function bindTouchEvents() {
   bindLeftButtonEvents();
   bindRightButtonEvents();
@@ -123,6 +172,9 @@ function bindTouchEvents() {
   bindThrowButtonEvents();
 }
 
+/**
+ * Binds touch events for the left movement button.
+ */
 function bindLeftButtonEvents() {
   const btnLeft = document.getElementById("btnLeft");
   if (btnLeft) {
@@ -132,6 +184,9 @@ function bindLeftButtonEvents() {
   }
 }
 
+/**
+ * Binds touch events for the right movement button.
+ */
 function bindRightButtonEvents() {
   const btnRight = document.getElementById("btnRight");
   if (btnRight) {
@@ -141,6 +196,9 @@ function bindRightButtonEvents() {
   }
 }
 
+/**
+ * Binds touch events for the jump button.
+ */
 function bindJumpButtonEvents() {
   const btnJump = document.getElementById("btnJump");
   if (btnJump) {
@@ -150,6 +208,9 @@ function bindJumpButtonEvents() {
   }
 }
 
+/**
+ * Binds touch events for the throw button.
+ */
 function bindThrowButtonEvents() {
   const btnThrow = document.getElementById("btnThrow");
   if (btnThrow) {
@@ -159,6 +220,12 @@ function bindThrowButtonEvents() {
   }
 }
 
+/**
+ * Adds a touch event listener to an element with preventDefault.
+ * @param {HTMLElement} element - The element to add the listener to.
+ * @param {string} eventType - The type of the touch event.
+ * @param {Function} callback - The function to execute on the event.
+ */
 function addTouchListener(element, eventType, callback) {
   element.addEventListener(eventType, (event) => {
     event.preventDefault();
@@ -166,6 +233,10 @@ function addTouchListener(element, eventType, callback) {
   });
 }
 
+/**
+ * Shows a specific screen based on the provided screen name.
+ * @param {string} screenName - The name of the screen to show.
+ */
 function showScreen(screenName) {
   if (screenManager) {
   }
@@ -190,4 +261,5 @@ function showScreen(screenName) {
   }
 }
 
+// Initialize the game when the window is loaded.
 window.addEventListener("load", init);

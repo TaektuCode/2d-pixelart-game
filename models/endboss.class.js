@@ -1,18 +1,83 @@
-class Endboss extends GameObject {
-  y = 200;
-  width = 400;
-  height = 350;
-  isDead = false;
-  isMovingLeft = false;
-  isHitState = false;
-  lastHitTime = 0;
-  hurtAnimationDuration = 500;
-  toBeRemoved = false;
-  deathAnimationInterval;
-  deathAnimationFrame = 0;
-  stepSoundDelay = 500;
-  lastStepSoundTime = 0;
+/**
+ * @file Defines the Endboss class, representing the final boss enemy in the game.
+ * It extends the GameObject class and includes specific behaviors for movement,
+ * attacking, getting hit, and dying, along with corresponding animations and sounds.
+ */
 
+/**
+ * Represents the final boss enemy in the game.
+ * Extends the {@link GameObject} class.
+ */
+class Endboss extends GameObject {
+  /**
+   * The fixed y-coordinate of the endboss.
+   * @type {number}
+   */
+  y = 200;
+  /**
+   * The width of the endboss image.
+   * @type {number}
+   */
+  width = 400;
+  /**
+   * The height of the endboss image.
+   * @type {number}
+   */
+  height = 350;
+  /**
+   * Indicates if the endboss is dead.
+   * @type {boolean}
+   */
+  isDead = false;
+  /**
+   * Indicates if the endboss is currently moving to the left.
+   * @type {boolean}
+   */
+  isMovingLeft = false;
+  /**
+   * Indicates if the endboss is in a hit state (playing the hurt animation).
+   * @type {boolean}
+   */
+  isHitState = false;
+  /**
+   * The timestamp of the last time the endboss was hit.
+   * @type {number}
+   */
+  lastHitTime = 0;
+  /**
+   * The duration of the hurt animation in milliseconds.
+   * @type {number}
+   */
+  hurtAnimationDuration = 500;
+  /**
+   * Flag indicating if the endboss should be removed from the game world.
+   * @type {boolean}
+   */
+  toBeRemoved = false;
+  /**
+   * Interval ID for the death animation.
+   * @type {number|null}
+   */
+  deathAnimationInterval = null;
+  /**
+   * The current frame index of the death animation.
+   * @type {number}
+   */
+  deathAnimationFrame = 0;
+  /**
+   * Delay in milliseconds between step sounds when moving.
+   * @type {number}
+   */
+  stepSoundDelay = 500;
+  /**
+   * The timestamp of the last step sound played.
+   * @type {number}
+   */
+  lastStepSoundTime = 0;
+  /**
+   * Array of image paths for the walking animation (flipped).
+   * @type {string[]}
+   */
   IMAGES_WALKING = [
     "assets/img/endboss/walk/Walk1_flip.png",
     "assets/img/endboss/walk/Walk2_flip.png",
@@ -21,19 +86,28 @@ class Endboss extends GameObject {
     "assets/img/endboss/walk/Walk5_flip.png",
     "assets/img/endboss/walk/Walk6_flip.png",
   ];
-
+  /**
+   * Array of image paths for the attack animation (flipped).
+   * @type {string[]}
+   */
   IMAGES_ATTACK = [
     "assets/img/endboss/attack/Attack1_flip.png",
     "assets/img/endboss/attack/Attack2_flip.png",
     "assets/img/endboss/attack/Attack3_flip.png",
     "assets/img/endboss/attack/Attack4_flip.png",
   ];
-
+  /**
+   * Array of image paths for the hurt animation (flipped).
+   * @type {string[]}
+   */
   IMAGES_HURT = [
     "assets/img/endboss/hurt/Hurt1_flip.png",
     "assets/img/endboss/hurt/Hurt2_flip.png",
   ];
-
+  /**
+   * Array of image paths for the death animation (flipped).
+   * @type {string[]}
+   */
   IMAGES_DEAD = [
     "assets/img/endboss/death/Death1_flip.png",
     "assets/img/endboss/death/Death2_flip.png",
@@ -42,7 +116,24 @@ class Endboss extends GameObject {
     "assets/img/endboss/death/Death5_flip.png",
     "assets/img/endboss/death/Death6_flip.png",
   ];
+  /**
+   * The offset for the collision box of the endboss.
+   * @type {Object}
+   * @property {number} top - The top offset.
+   * @property {number} left - The left offset.
+   * @property {number} right - The right offset.
+   * @property {number} bottom - The bottom offset.
+   */
+  offset = {
+    top: 130,
+    left: 185,
+    right: 90,
+    bottom: 90,
+  };
 
+  /**
+   * Creates a new Endboss instance.
+   */
   constructor() {
     super();
     this.loadImage("assets/img/endboss/walk/Walk1_flip.png");
@@ -55,15 +146,11 @@ class Endboss extends GameObject {
     this.speed = 0.45;
     this.animate();
     this.isMovingLeft = false;
-
-    this.offset = {
-      top: 130,
-      left: 185,
-      right: 90,
-      bottom: 90,
-    };
   }
 
+  /**
+   * Initiates the animation loop for the endboss, handling hurt and walking states.
+   */
   animate() {
     setInterval(() => {
       if (this.isHitState && !this.isDead) {
@@ -78,6 +165,9 @@ class Endboss extends GameObject {
     }, 200);
   }
 
+  /**
+   * Initiates the death animation sequence.
+   */
   animateDeath() {
     let i = 0;
     this.deathAnimationInterval = setInterval(() => {
@@ -92,6 +182,9 @@ class Endboss extends GameObject {
     }, 215);
   }
 
+  /**
+   * Starts the movement of the endboss to the left, including playing step sounds.
+   */
   startMovingLeft() {
     this.isMovingLeft = true;
     setInterval(() => {
@@ -106,6 +199,11 @@ class Endboss extends GameObject {
     }, 1000 / 60);
   }
 
+  /**
+   * Handles the endboss getting hit, reducing health, triggering the hurt animation,
+   * and checking for death.
+   * @param {number} damage - The amount of damage taken.
+   */
   hit(damage) {
     this.hp -= damage;
     this.isHitState = true;
@@ -117,6 +215,9 @@ class Endboss extends GameObject {
     }
   }
 
+  /**
+   * Initiates the death sequence of the endboss.
+   */
   die() {
     this.isDead = true;
     AudioHub.playOneSound(AudioHub.ENDBOSS_DEATH);
@@ -125,6 +226,11 @@ class Endboss extends GameObject {
     this.animateDeath();
   }
 
+  /**
+   * Plays the attack animation sequence and optionally executes a callback function
+   * when the animation is complete.
+   * @param {Function} [callback] - An optional function to execute after the attack animation.
+   */
   playAttackAnimation(callback) {
     let i = 0;
     const attackInterval = setInterval(() => {
@@ -133,12 +239,15 @@ class Endboss extends GameObject {
       if (i >= this.IMAGES_ATTACK.length) {
         clearInterval(attackInterval);
         if (callback) {
-          callback(); // Rufe die Callback-Funktion auf, nachdem die Animation beendet ist
+          callback();
         }
       }
-    }, 200); // Geschwindigkeit der Attack-Animation
+    }, 200);
   }
 
+  /**
+   * Marks the endboss to be removed from the game world.
+   */
   removeFromWorld() {
     this.toBeRemoved = true;
   }
