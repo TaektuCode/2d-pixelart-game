@@ -15,13 +15,11 @@ class StatusBarEndboss extends DrawableObject {
     this.width = 200;
     this.height = 40;
   }
-
   setPercentage(percentage) {
     this.percentage = percentage;
   }
 
   draw(ctx) {
-    // Zeichne den Rahmen der Statusbar
     if (this.imageCache[this.IMAGE_BAR[0]]) {
       ctx.drawImage(
         this.imageCache[this.IMAGE_BAR[0]],
@@ -32,7 +30,6 @@ class StatusBarEndboss extends DrawableObject {
       );
     }
 
-    // Zeichne die HP-Punkte
     if (this.imageCache[this.IMAGE_HP[0]]) {
       const hpPointsToShow = Math.max(0, Math.ceil(this.percentage / 10));
       const hpPointWidth = 12;

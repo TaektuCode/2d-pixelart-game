@@ -21,10 +21,10 @@ class Enemy1 extends GameObject {
     this.animate();
 
     this.offset = {
-      top: 35, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
-      left: 35, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
-      right: 10, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
-      bottom: 10, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
+      top: 35,
+      left: 35,
+      right: 10,
+      bottom: 10,
     };
   }
 
@@ -38,7 +38,7 @@ class Enemy1 extends GameObject {
   }
 
   hit() {
-    this.hp = 0; // Setze die HP sofort auf 0
+    this.hp = 0;
     if (!this.isDeadEnemy) {
       AudioHub.playOneSound(AudioHub.ENEMY1DEAD);
       this.isDeadEnemy = true;

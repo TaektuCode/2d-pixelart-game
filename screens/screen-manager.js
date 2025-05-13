@@ -5,12 +5,11 @@ class ScreenManager {
     showGameOverCallback,
     showWinScreenCallback,
   ) {
-    // Optional: showWinScreenCallback hinzufügen, falls noch nicht vorhanden
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.startGameCallback = startGameCallback;
     this.showGameOverCallback = showGameOverCallback;
-    this.showWinScreenCallback = showWinScreenCallback; // Store the new callback
+    this.showWinScreenCallback = showWinScreenCallback;
     this.introScreen = new IntroScreen(canvas, this.showStartScreen.bind(this));
     this.startScreen = new StartScreen(
       canvas,
@@ -22,22 +21,21 @@ class ScreenManager {
       this.showStartScreen.bind(this),
       this.startGame.bind(this),
     );
-    this.gameOverScreen = new GameOverScreen( // Create GameOverScreen instance
+    this.gameOverScreen = new GameOverScreen(
       canvas,
-      this.startGame.bind(this), // Restart callback
-      this.showStartScreen.bind(this), // Menu callback
+      this.startGame.bind(this),
+      this.showStartScreen.bind(this),
     );
-    this.winScreen = new WinScreen( // Erstelle eine Instanz des WinScreen
+    this.winScreen = new WinScreen(
       canvas,
-      this.startGame.bind(this), // Callback für "Play Again" (hier wird startGame verwendet)
-      this.closeGame, // Callback für "Close Game" (muss noch definiert werden)
+      this.startGame.bind(this),
+      this.closeGame,
     );
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();
     this.isRunning = true;
     this.drawLoop();
 
-    // Event Listener für Fenstergrößenänderungen hinzufügen
     window.addEventListener("resize", this.handleResize.bind(this));
   }
 
@@ -86,18 +84,9 @@ class ScreenManager {
     this.switchToScreen(this.winScreen);
   }
 
-  closeGame() {
-    window.close(); // Diese Funktion schließt das Browserfenster
-  }
-
   switchToScreen(screen) {
-    console.log("ScreenManager: switchToScreen", screen.constructor.name);
     if (this.activeScreen && this.activeScreen.removeEventListeners) {
       this.activeScreen.removeEventListeners();
-      console.log(
-        "ScreenManager: removed listeners from",
-        this.activeScreen.constructor.name,
-      );
     }
     this.activeScreen = screen;
     if (typeof this.activeScreen.handleResize === "function") {

@@ -117,7 +117,6 @@ class StartScreen {
   }
 
   handleClick(event) {
-    console.log("handleClick wurde ausgelöst!", event.type);
     let clickX, clickY;
     const rect = this.canvas.getBoundingClientRect();
 
@@ -129,10 +128,6 @@ class StartScreen {
       clickX = event.clientX - rect.left;
       clickY = event.clientY - rect.top;
     }
-
-    console.log("Klick/Touch Koordinaten:", clickX, clickY);
-    console.log("Start Button:", this.startButton);
-    console.log("Controls Button:", this.controlsButton);
 
     if (this.isPointInside(clickX, clickY, this.controlsButton)) {
       this.removeEventListeners();

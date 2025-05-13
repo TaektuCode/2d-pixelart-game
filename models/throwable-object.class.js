@@ -1,16 +1,16 @@
 class ThrowableObject extends GameObject {
-  accelerationY = -1.5; // Schwerkraft für den Stein
+  accelerationY = -1.5;
   isFalling = true;
   throwInterval;
   isRemoved = false;
-  startY; // Speichert den initialen Y-Wert
+  startY;
 
   constructor(x, y, characterOtherDirection) {
     super(x, y);
     this.loadImage("assets/img/character/attack/stone.png");
     this.x = x - 30;
     this.y = y;
-    this.startY = y; // Initialen Y-Wert speichern
+    this.startY = y;
     this.width = 60;
     this.height = 60;
     this.speedY = 20;
@@ -30,7 +30,6 @@ class ThrowableObject extends GameObject {
         this.y -= this.speedY;
         this.speedY += this.accelerationY;
 
-        // Prüfe, ob der Stein sich abwärts bewegt UND den Bodenlevel überschritten hat
         if (this.speedY < -35 && this.y > 350) {
           this.remove();
         }

@@ -10,7 +10,7 @@ class Endboss extends GameObject {
   toBeRemoved = false;
   deathAnimationInterval;
   deathAnimationFrame = 0;
-  stepSoundDelay = 500; // Verzögerung in Millisekunden (anpassen)
+  stepSoundDelay = 500;
   lastStepSoundTime = 0;
 
   IMAGES_WALKING = [
@@ -53,7 +53,7 @@ class Endboss extends GameObject {
     this.x = 2550;
     this.hp = 90;
     this.speed = 0.45;
-    this.animate(); // Für Walking und Hurt
+    this.animate();
     this.isMovingLeft = false;
 
     this.offset = {
@@ -75,7 +75,6 @@ class Endboss extends GameObject {
       } else if (this.isMovingLeft) {
         this.playAnimation(this.IMAGES_WALKING);
       }
-      // Die Todesanimation wird separat gesteuert
     }, 200);
   }
 
@@ -83,12 +82,6 @@ class Endboss extends GameObject {
     let i = 0;
     this.deathAnimationInterval = setInterval(() => {
       this.img = this.imageCache[this.IMAGES_DEAD[i % this.IMAGES_DEAD.length]];
-      console.log(
-        "animateDeath: i =",
-        i,
-        ", length =",
-        this.IMAGES_DEAD.length,
-      ); // Überprüfe das hier
       i++;
       if (i >= this.IMAGES_DEAD.length) {
         clearInterval(this.deathAnimationInterval);
@@ -129,8 +122,7 @@ class Endboss extends GameObject {
     AudioHub.playOneSound(AudioHub.ENDBOSS_DEATH);
     this.isMovingLeft = false;
     this.isHitState = false;
-    console.log("Endboss ist gestorben! Starte animateDeath()"); // Überprüfe das hier
-    this.animateDeath(); // Starte die separate Todesanimation
+    this.animateDeath();
   }
 
   playAttackAnimation(callback) {

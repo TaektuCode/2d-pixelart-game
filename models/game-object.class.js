@@ -17,18 +17,10 @@ class GameObject extends DrawableObject {
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.velocity;
-        // if (this instanceof MainCharacter) {
-        //   console.log(
-        //     "GameObject - applyGravity: speedY:",
-        //     this.speedY,
-        //     "y:",
-        //     this.y,
-        //   );
-        // }
       }
       if (!this.isAboveGround() && this.speedY < 0) {
-        this.y = 330; // Setze die Y-Koordinate direkt auf die Bodenhöhe
-        this.speedY = 0; // Stoppe die Abwärtsbewegung
+        this.y = 330;
+        this.speedY = 0;
       }
     }, 1000 / 20);
   }
@@ -45,12 +37,10 @@ class GameObject extends DrawableObject {
     let charRight = this.x + this.width - this.offset.right;
     let charTop = this.y + this.offset.top;
     let charBottom = this.y + this.height - this.offset.bottom;
-
     let goLeft = go.x + go.offset.left;
     let goRight = go.x + go.width - go.offset.right;
     let goTop = go.y + go.offset.top;
     let goBottom = go.y + go.height - go.offset.bottom;
-
     return (
       charRight > goLeft &&
       charBottom > goTop &&
@@ -87,7 +77,7 @@ class GameObject extends DrawableObject {
   }
 
   playAnimation(images) {
-    let i = this.currentImage % images.length; // let i = 0 % 6
+    let i = this.currentImage % images.length;
     let path = images[i];
     this.img = this.imageCache[path];
     this.currentImage++;
@@ -104,8 +94,7 @@ class GameObject extends DrawableObject {
     let width = this.width - this.offset.left - this.offset.right;
 
     if (this.otherDirection) {
-      // Wenn nach links geschaut wird, müssen wir die x-Koordinate anpassen
-      x = this.x + this.offset.right; // Beginne vom linken Rand + dem ursprünglichen rechten Offset
+      x = this.x + this.offset.right;
     }
 
     ctx.strokeRect(

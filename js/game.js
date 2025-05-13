@@ -29,8 +29,7 @@ function resizeCanvas() {
   if (gameBox && canvas) {
     canvas.width = gameBox.offsetWidth;
     canvas.height = gameBox.offsetHeight;
-    // Informiere den ScreenManager oder die aktiven Screens über die Größenänderung,
-    // damit Button-Positionen und Zeichnungen angepasst werden können.
+
     if (
       screenManager &&
       screenManager.activeScreen &&
@@ -38,7 +37,7 @@ function resizeCanvas() {
     ) {
       screenManager.activeScreen.handleResize();
     } else if (screenManager && screenManager.activeScreen) {
-      screenManager.activeScreen.draw(); // Einfacher Redraw als Fallback
+      screenManager.activeScreen.draw();
     }
   }
 }
@@ -69,7 +68,6 @@ function clearAllIntervals() {
 }
 
 function gameOver() {
-  console.log("gameOver wird aufgerufen");
   AudioHub.stopAllSounds();
   gameIsOver = true;
   showScreen("gameOver");
@@ -77,7 +75,6 @@ function gameOver() {
 }
 
 function gameWon() {
-  console.log("gameWon wird aufgerufen");
   AudioHub.stopAllSounds();
   gameIsOver = true;
   showScreen("gameWon");
@@ -177,10 +174,8 @@ function bindTouchEvents() {
   }
 }
 
-// Neue Funktion zum Anzeigen von Bildschirmen
 function showScreen(screenName) {
   if (screenManager) {
-    // console.log("screenManager da");
   }
   switch (screenName) {
     case "intro":

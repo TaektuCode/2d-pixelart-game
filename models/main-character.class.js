@@ -60,17 +60,16 @@ class MainCharacter extends GameObject {
     this.animate();
 
     this.offset = {
-      top: 75, //Die Kollisionsbox beginnt x Pixel unterhalb der oberen Bildgrenze
-      left: 50, //Die Kollisionsbox beginnt x Pixel rechts der linken Bildgrenze
-      right: 110, //Die Kollisionsbox endet x Pixel links der rechten Bildgrenze
-      bottom: 25, //Die Kollisionsbox endet x Pixel oberhalb der unteren Bildgrenze
+      top: 75,
+      left: 50,
+      right: 110,
+      bottom: 25,
     };
   }
 
   animate() {
     setInterval(() => {
       if (!this.isDeadCharacter) {
-        // Nur bewegen, wenn der Charakter nicht tot ist
         if (
           this.world.keyboard.RIGHT &&
           this.x < this.world.level.level_end_x
@@ -78,33 +77,28 @@ class MainCharacter extends GameObject {
           this.moveRight();
           this.otherDirection = false;
         }
-
         if (this.world.keyboard.LEFT && this.x > 0) {
           this.moveLeft();
           this.otherDirection = true;
         }
-
         if (this.world.keyboard.SPACE && !this.isAboveGround()) {
           this.jump();
         }
-
         this.world.camera_x = -this.x + 100;
       }
     }, 1000 / 60);
 
     setInterval(() => {
       if (this.isDead()) {
-        this.playDeathAnimation(); // Rufe die spezielle Dead-Animation auf
+        this.playDeathAnimation();
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPING);
       } else {
-        // Wenn nicht in der Luft, nicht verletzt und nicht tot:
         if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
           this.playAnimation(this.IMAGES_WALKING);
         } else {
-          // Wenn keine Bewegung, zeige das erste Walking-Bild
           this.img = this.imageCache[this.IMAGES_WALKING[0]];
         }
       }

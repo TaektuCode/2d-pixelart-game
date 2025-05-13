@@ -52,10 +52,6 @@ class World {
       this.throwableObjects.push(stone);
       stone.throw();
       this.character.stones--;
-      console.log(
-        "Stein geworfen. Verbleibende Anzahl:",
-        this.character.stones,
-      );
       this.collectableStatusBar.setCollectableCount(this.character.stones);
       setTimeout(() => {
         this.isThrowing = false;
@@ -100,21 +96,20 @@ class World {
         !endboss.hasAttacked
       ) {
         AudioHub.stopOneSound(AudioHub.GAME_MUSIC);
-        AudioHub.playOneSound(AudioHub.ENDBOSS_ACTIVATION); // Spiele den Aktivierungs-Sound ab
+        AudioHub.playOneSound(AudioHub.ENDBOSS_ACTIVATION);
         endboss.hasAttacked = true;
         AudioHub.playLoopingSound(AudioHub.ENDBOSS_FIGHT);
         endboss.playAttackAnimation(() => {
           endboss.isMovingLeft = true;
           endboss.startMovingLeft();
-          console.log("Endboss aktiviert und greift an!");
-          this.createAndAddEndbossStatusBar(); // Rufe die neue Methode auf
+          this.createAndAddEndbossStatusBar();
         });
       }
     }
   }
 
   createAndAddEndbossStatusBar() {
-    this.endbossStatusBar = new StatusBarEndboss(this.canvas.width); // Jetzt mit Canvas-Breite
+    this.endbossStatusBar = new StatusBarEndboss(this.canvas.width);
     this.addToMap(this.endbossStatusBar);
   }
 
@@ -131,7 +126,6 @@ class World {
   checkThrowableObjectCollisionsWithEnemies() {
     this.throwableObjects.forEach((throwableObject, index) => {
       if (!throwableObject.isRemoved) {
-        // Nur prüfen, wenn der Stein nicht entfernt wurde
         this.level.enemies.forEach((enemy, enemyIndex) => {
           if (throwableObject.isColliding(enemy)) {
             if (enemy instanceof Enemy1) {
@@ -140,7 +134,7 @@ class World {
               AudioHub.playOneSound(AudioHub.ENEMY2DEAD);
             }
             this.level.enemies.splice(enemyIndex, 1);
-            throwableObject.remove(); // Entferne den Stein nach der Kollision
+            throwableObject.remove();
           }
         });
       }
@@ -148,7 +142,6 @@ class World {
         this.throwableObjects.splice(index, 1);
       }
     });
-    // Filter entfernt die entfernten Objekte aus dem Array (sauberere Lösung)
     this.throwableObjects = this.throwableObjects.filter(
       (obj) => !obj.isRemoved,
     );
@@ -161,8 +154,7 @@ class World {
           const endboss = this.level.endboss[0];
           if (throwableObject.isColliding(endboss)) {
             endboss.hit(30);
-            console.log("Endboss getroffen! Neue HP:", endboss.hp);
-            throwableObject.remove(); // Entferne den Stein nach der Kollision
+            throwableObject.remove();
             if (this.endbossStatusBar) {
               this.endbossStatusBar.setPercentage(endboss.hp);
             }
@@ -201,12 +193,8 @@ class World {
         this.collectableStatusBar.setCollectableCount(
           this.collectableStatusBar.collectableCount + 1,
         );
-        this.character.stones++; // Erhöhe die Anzahl der Steine des Charakters
+        this.character.stones++;
         AudioHub.playOneSound(AudioHub.COLLECTSTONE);
-        console.log(
-          "Stein eingesammelt. Aktuelle Anzahl:",
-          this.character.stones,
-        ); // Optional zur Überprüfung
       }
     });
   }

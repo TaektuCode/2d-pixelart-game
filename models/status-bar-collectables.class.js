@@ -1,6 +1,6 @@
 class StatusBarCollectables extends DrawableObject {
-  IMAGE_BAR = ["assets/img/statusbars/health/hp_bar_full.png"]; // Rahmen
-  IMAGE_POINT = ["assets/img/statusbars/attacks/magic_point.png"]; // Icon für den Stein
+  IMAGE_BAR = ["assets/img/statusbars/health/hp_bar_full.png"];
+  IMAGE_POINT = ["assets/img/statusbars/attacks/magic_point.png"];
   collectableCount = 0;
 
   constructor() {
@@ -10,7 +10,7 @@ class StatusBarCollectables extends DrawableObject {
     this.setCollectableCount(0);
     this.x = 10;
     this.y = 50;
-    this.width = 200; // Breite für Icons und Text
+    this.width = 200;
     this.height = 30;
   }
 
@@ -19,7 +19,6 @@ class StatusBarCollectables extends DrawableObject {
   }
 
   draw(ctx) {
-    // Zeichne den Rahmen
     if (this.imageCache[this.IMAGE_BAR[0]]) {
       ctx.drawImage(
         this.imageCache[this.IMAGE_BAR[0]],
@@ -30,7 +29,6 @@ class StatusBarCollectables extends DrawableObject {
       );
     }
 
-    // Zeichne die Stein-Icons
     if (this.imageCache[this.IMAGE_POINT[0]]) {
       const iconWidth = 25;
       const iconHeight = 15;
@@ -54,7 +52,6 @@ class StatusBarCollectables extends DrawableObject {
         );
       }
 
-      // Zeichne die Gesamtzahl rechts
       ctx.font = "16px sans-serif";
       ctx.fillStyle = "white";
       ctx.textAlign = "right";
@@ -63,7 +60,7 @@ class StatusBarCollectables extends DrawableObject {
         this.x + this.width - 25,
         this.y + 20,
       );
-      ctx.textAlign = "start"; // Reset text alignment
+      ctx.textAlign = "start";
     }
   }
 }

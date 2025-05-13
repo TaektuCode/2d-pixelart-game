@@ -11,8 +11,8 @@ class StatusBar extends DrawableObject {
     this.setPercentage(100);
     this.x = 10;
     this.y = 5;
-    this.width = 200; // Breite des Rahmens
-    this.height = 40; // Höhe des Rahmens
+    this.width = 200;
+    this.height = 40;
   }
 
   setPercentage(percentage) {
@@ -20,7 +20,6 @@ class StatusBar extends DrawableObject {
   }
 
   draw(ctx) {
-    // Zeichne den Rahmen der Statusbar
     if (this.imageCache[this.IMAGE_BAR[0]]) {
       ctx.drawImage(
         this.imageCache[this.IMAGE_BAR[0]],
@@ -31,24 +30,22 @@ class StatusBar extends DrawableObject {
       );
     }
 
-    // Berechne die Anzahl der anzuzeigenden HP-Punkte
-    const hpPointsToShow = Math.max(0, Math.ceil(this.percentage / 10)); // Für alle 10 HP ein Punkt
+    const hpPointsToShow = Math.max(0, Math.ceil(this.percentage / 10));
 
-    // Zeichne die HP-Punkte
     if (this.imageCache[this.IMAGE_HP[0]]) {
-      const hpPointWidth = 12; // Beispielbreite eines HP-Punkts
-      const spacing = 5; // Beispielabstand zwischen den HP-Punkten
+      const hpPointWidth = 12;
+      const spacing = 5;
 
       for (let i = 0; i < hpPointsToShow; i++) {
-        const hpPointX = this.x + 17 + i * (hpPointWidth + spacing); // Positioniere die Punkte innerhalb des Rahmens
-        const hpPointY = this.y + 10; // Beispiel y-Position innerhalb des Rahmens
+        const hpPointX = this.x + 17 + i * (hpPointWidth + spacing);
+        const hpPointY = this.y + 10;
 
         ctx.drawImage(
           this.imageCache[this.IMAGE_HP[0]],
           hpPointX,
           hpPointY,
           hpPointWidth,
-          20, // Beispielhöhe des HP-Punkts
+          20,
         );
       }
     }
