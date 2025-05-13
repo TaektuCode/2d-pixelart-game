@@ -89,7 +89,7 @@ canvas {
     z-index: 10;
   }
 
-  h1 {
+  #gameTitle {
     display: none;
   }
 
@@ -108,7 +108,7 @@ canvas {
     width: 100% !important;
   }
 
-  h1 {
+  #gameTitle {
     display: none;
   }
 
@@ -156,6 +156,36 @@ canvas {
   }
 }
 
+.imprint {
+  font-family: serif;
+  height: 100vh;
+  background-color: white;
+  padding: 0px 20px;
+
+  .im-h1 {
+    text-align: center;
+    padding-bottom: 10px;
+    font-family: serif;
+  }
+}
+
+.back-button {
+  position: absolute; /* Ermöglicht die Positionierung oben links */
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
 @font-face {
   font-family: "OldLondon";
   src: url("assets/fonts/OldLondon.ttf") format("truetype");

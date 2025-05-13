@@ -32,6 +32,13 @@ class StartScreen {
       width: 200,
       height: 50,
     };
+    this.imprintButton = {
+      label: "Imprint",
+      x: canvas.width / 2 - 110, // Gleiche x-Koordinate wie die anderen
+      y: canvas.height / 2 + 75, // Unterhalb des Controls-Buttons
+      width: 200,
+      height: 50,
+    };
     this.setBindings();
     this.addEventListeners();
     this.backgroundImage.onload = () => {
@@ -46,6 +53,8 @@ class StartScreen {
     this.startButton.y = this.canvas.height / 2 - 100;
     this.controlsButton.x = this.canvas.width / 2 - 110;
     this.controlsButton.y = this.canvas.height / 2;
+    this.imprintButton.x = this.canvas.width / 2 - 110;
+    this.imprintButton.y = this.canvas.height / 2 + 75;
     this.draw();
   }
 
@@ -83,6 +92,7 @@ class StartScreen {
     }
     this.drawButton(this.startButton);
     this.drawButton(this.controlsButton);
+    this.drawButton(this.imprintButton);
   }
 
   drawButton(button) {
@@ -122,11 +132,13 @@ class StartScreen {
 
     if (this.isPointInside(clickX, clickY, this.controlsButton)) {
       this.removeEventListeners();
-      AudioHub.stopStartScreenMusic();
-      this.startGameCallback(); // "Start Game" Button (oben) startet das Spiel
+      this.showControlsCallback();
     } else if (this.isPointInside(clickX, clickY, this.startButton)) {
       this.removeEventListeners();
-      this.showControlsCallback(); // "Controls" Button (unten) zeigt Controls-Screen
+      AudioHub.stopStartScreenMusic();
+      this.startGameCallback();
+    } else if (this.isPointInside(clickX, clickY, this.imprintButton)) {
+      window.location.href = "imprint.html";
     }
   }
 
