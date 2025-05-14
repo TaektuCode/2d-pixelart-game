@@ -114,6 +114,20 @@ canvas {
     width: 35px !important;
     height: 35px !important;
   }
+
+  #muteButton {
+    top: 10px !important;
+    left: 48% !important;
+    z-index: 10 !important;
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  #muteIcon {
+    z-index: 10 !important;
+    width: 25px !important;
+    height: 25px !important;
+  }
 }
 
 @media only screen and (max-height: 480px) {
@@ -259,17 +273,17 @@ canvas {
   }
 
   #muteButton {
-    top: 10px;
+    top: 25px;
     left: 48%;
     z-index: 10;
-    width: 15px;
-    height: 15px;
+    width: 60px;
+    height: 60px;
   }
 
   #muteIcon {
     z-index: 10;
-    width: 25px;
-    height: 25px;
+    width: 60px;
+    height: 60px;
   }
 }
 

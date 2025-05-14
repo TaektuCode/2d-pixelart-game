@@ -1,3 +1,6 @@
+/**
+ * Represents the game world and handles core game loop and interactions.
+ */
 class World {
   character = new MainCharacter();
   statusBar = new StatusBar();
@@ -8,6 +11,12 @@ class World {
   endbossStatusBar = null;
   endbossActivated = false;
 
+  /**
+   * Creates the game world.
+   * @param {HTMLCanvasElement} canvas - The canvas element to draw the game on.
+   * @param {object} keyboard - The keyboard input handler.
+   * @param {object} level - The level data containing enemies, objects, etc.
+   */
   constructor(canvas, keyboard, level) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -18,15 +27,18 @@ class World {
     this.run();
   }
 
+  /** Links the world instance to the character. */
   setWorld() {
     this.character.world = this;
   }
 
+  /** Starts the game loop and background music. */
   run() {
-    this.gameInterval = setInterval(() => this.gameLoop(), 100); // Fixed interval reference
+    this.gameInterval = setInterval(() => this.gameLoop(), 100);
     AudioHub.playLoopingSound(AudioHub.GAME_MUSIC);
   }
 
+  /** Main game loop: checks collisions and events. */
   gameLoop() {
     this.checkCollisions();
     this.checkCollisionWithEndboss();
@@ -38,6 +50,7 @@ class World {
     this.checkThrowableObjectCollisionWithEndboss();
   }
 
+  /** Checks if player can throw and initiates throw if allowed. */
   checkThrowObjects() {
     if (this.canThrowStone()) {
       this.throwStone();
@@ -46,10 +59,12 @@ class World {
     }
   }
 
+  /** @returns {boolean} Whether the player is allowed to throw a stone. */
   canThrowStone() {
     return this.keyboard.D && !this.isThrowing && this.character.stones > 0;
   }
 
+  /** Creates and throws a stone from the character’s position. */
   throwStone() {
     this.isThrowing = true;
     const stone = new ThrowableObject(
@@ -64,6 +79,7 @@ class World {
     setTimeout(() => (this.isThrowing = false), 500);
   }
 
+  /** Checks collision between character and enemies. */
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (
@@ -77,6 +93,11 @@ class World {
     });
   }
 
+  /**
+   * Determines if the character is jumping on the enemy.
+   * @param {object} enemy - The enemy object to check.
+   * @returns {boolean}
+   */
   isJumpingOnEnemy(enemy) {
     return (
       this.character.isJumping &&
@@ -85,6 +106,11 @@ class World {
     );
   }
 
+  /**
+   * Handles logic when character jumps on an enemy.
+   * @param {object} enemy - The enemy object hit.
+   * @param {number} index - Index of the enemy in the array.
+   */
   processJumpOnEnemy(enemy, index) {
     enemy.hit();
     this.level.enemies.splice(index, 1);
@@ -92,17 +118,20 @@ class World {
     this.character.isJumping = false;
   }
 
+  /** Handles logic when character is hit by an enemy. */
   processCharacterHit() {
     this.character.hit();
     this.statusBar.setPercentage(this.character.hp);
   }
 
+  /** Checks if endboss should be activated. */
   checkEndbossActivation() {
     if (this.isEndbossPresentAndReady()) {
       this.activateEndbossSequence();
     }
   }
 
+  /** @returns {boolean} Whether the endboss is in a state to be activated. */
   isEndbossPresentAndReady() {
     const endboss = this.level.endboss[0];
     return (
@@ -113,6 +142,7 @@ class World {
     );
   }
 
+  /** Triggers the endboss sequence with sounds and animation. */
   activateEndbossSequence() {
     const endboss = this.level.endboss[0];
     AudioHub.stopOneSound(AudioHub.GAME_MUSIC);
@@ -122,6 +152,10 @@ class World {
     endboss.playAttackAnimation(() => this.triggerEndbossMovement(endboss));
   }
 
+  /**
+   * Starts the endboss movement and initializes its status bar.
+   * @param {object} endboss - The endboss object.
+   */
   triggerEndbossMovement(endboss) {
     endboss.isMovingLeft = true;
     endboss.startMovingLeft();
@@ -129,6 +163,7 @@ class World {
     this.addToMap(this.endbossStatusBar);
   }
 
+  /** Checks for collisions between the character and the endboss. */
   checkCollisionWithEndboss() {
     const endboss = this.level.endboss?.[0];
     if (endboss && this.character.isColliding(endboss)) {
@@ -137,6 +172,7 @@ class World {
     }
   }
 
+  /** Checks collisions between throwable objects and enemies. */
   checkThrowableObjectCollisionsWithEnemies() {
     this.throwableObjects.forEach((obj, index) => {
       if (!obj.isRemoved) {
@@ -154,16 +190,25 @@ class World {
     );
   }
 
+  /**
+   * Plays the appropriate sound when an enemy dies.
+   * @param {object} enemy - The enemy that died.
+   */
   playEnemyDeathSound(enemy) {
     const sound =
       enemy instanceof Enemy1 ? AudioHub.ENEMY1DEAD : AudioHub.ENEMY2DEAD;
     AudioHub.playOneSound(sound);
   }
 
+  /**
+   * Removes an enemy from the level.
+   * @param {number} enemyIndex - Index of the enemy to remove.
+   */
   removeEnemy(enemyIndex) {
     this.level.enemies.splice(enemyIndex, 1);
   }
 
+  /** Handles hits between throwable objects and the endboss. */
   checkThrowableObjectCollisionWithEndboss() {
     this.throwableObjects.forEach((throwableObject) => {
       if (throwableObject.isColliding(this.level.endboss[0])) {
@@ -181,6 +226,7 @@ class World {
     );
   }
 
+  /** Checks for collisions with coin collectables. */
   checkCollectables() {
     this.level.collectables.forEach((collectable, index) => {
       if (this.character.isColliding(collectable)) {
@@ -190,6 +236,7 @@ class World {
     });
   }
 
+  /** Checks for collisions with stone collectables. */
   checkCollectableStones() {
     this.level.collectableStone.forEach((collectable, index) => {
       if (this.character.isColliding(collectable)) {
@@ -203,6 +250,7 @@ class World {
     });
   }
 
+  /** Draws all game elements to the canvas. */
   draw() {
     if (gameIsOver) return;
     this.clearCanvasAndSetCamera();
@@ -213,22 +261,26 @@ class World {
     this.requestNextFrame();
   }
 
+  /** Clears the canvas and applies camera translation. */
   clearCanvasAndSetCamera() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.ctx.translate(this.camera_x, 0);
   }
 
+  /** Draws background objects like sky and clouds. */
   drawBackgroundElements() {
     this.addObjectsToMap(this.level.backgroundObjects);
     this.addObjectsToMap(this.level.clouds);
   }
 
+  /** Draws character and endboss if applicable. */
   drawCharacterAndEndboss() {
     this.addToMap(this.character);
     this.handleEndbossActivation();
     this.renderEndbossIfActivated();
   }
 
+  /** Activates endboss when player reaches trigger point. */
   handleEndbossActivation() {
     if (
       this.level.endboss?.length > 0 &&
@@ -243,6 +295,7 @@ class World {
     }
   }
 
+  /** Renders endboss and its status bar if active. */
   renderEndbossIfActivated() {
     if (this.endbossActivated) {
       const endboss = this.level.endboss[0];
@@ -252,17 +305,20 @@ class World {
     }
   }
 
+  /** Initializes the endboss health bar. */
   initializeEndbossStatusBar() {
     if (!this.endbossStatusBar) {
       this.endbossStatusBar = new StatusBarEndboss(this.canvas.width);
     }
   }
 
+  /** Updates the position of the endboss status bar. */
   updateEndbossStatusBarPosition() {
     this.endbossStatusBar.x =
       this.canvas.width - this.endbossStatusBar.width - 10 - this.camera_x;
   }
 
+  /** Draws interactive elements like enemies, items, and throwable objects. */
   drawInteractiveElements() {
     this.addObjectsToMap(this.level.enemies);
     this.addObjectsToMap(this.level.collectables);
@@ -270,10 +326,12 @@ class World {
     this.addObjectsToMap(this.getActiveThrowableObjects());
   }
 
+  /** @returns {Array} Filtered list of active throwable objects. */
   getActiveThrowableObjects() {
     return this.throwableObjects.filter((obj) => !obj.isRemoved);
   }
 
+  /** Resets the camera and draws UI elements. */
   resetCameraAndDrawUI() {
     this.ctx.translate(-this.camera_x, 0);
     this.addToMap(this.statusBar);
@@ -281,18 +339,28 @@ class World {
     this.addToMap(this.statusCoins);
   }
 
+  /** Requests the next animation frame. */
   requestNextFrame() {
     requestAnimationFrame(() => this.draw());
   }
 
+  /**
+   * Adds an array of objects to the map.
+   * @param {Array} objects - Array of drawable objects.
+   */
   addObjectsToMap(objects) {
     objects.forEach((o) => this.addToMap(o));
   }
 
+  /**
+   * Draws an individual game object if drawable.
+   * @param {object} go - A game object with a draw method.
+   */
   addToMap(go) {
     if (go instanceof DrawableObject) go.draw(this.ctx);
   }
 
+  /** Clears all set intervals in the window scope. */
   clearAllIntervals() {
     for (let i = 1; i < 9999; i++) window.clearInterval(i);
   }
