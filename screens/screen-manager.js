@@ -65,6 +65,12 @@ class ScreenManager {
   winScreen;
 
   /**
+   * The screen instance shown in portrait mode.
+   * @type {WarningScreen|null}
+   */
+  warningScreen;
+
+  /**
    * The currently active screen being displayed and interacted with.
    * @type {IntroScreen|StartScreen|ControlScreen|GameOverScreen|WinScreen|OrientationScreen|null}
    */
@@ -122,12 +128,14 @@ class ScreenManager {
       this.startGame.bind(this),
       this.showStartScreen.bind(this),
     );
+    this.warningScreen = new WarningScreen(canvas);
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();
     this.isRunning = true;
     this.drawLoop();
 
     window.addEventListener("resize", this.handleResize.bind(this));
+    this.checkOrientation();
   }
 
   /**
@@ -146,6 +154,7 @@ class ScreenManager {
    * otherwise, it falls back to calling the `draw` method of the active screen.
    */
   handleResize() {
+    this.checkOrientation();
     if (
       this.activeScreen &&
       typeof this.activeScreen.handleResize === "function"
@@ -201,6 +210,13 @@ class ScreenManager {
   }
 
   /**
+   * Switches the active screen to the warning screen.
+   */
+  showWarningScreen() {
+    this.switchToScreen(this.warningScreen);
+  }
+
+  /**
    * Switches the currently active screen to the provided screen. If the previous screen had a
    * `removeEventListeners` method, it is called to clean up event listeners. The new screen's
    * `handleResize` method is called if it exists, otherwise its `draw` method is called as a fallback.
@@ -240,9 +256,9 @@ class ScreenManager {
    */
   checkOrientation() {
     if (window.innerWidth < window.innerHeight) {
-      this.showOrientationScreen();
+      this.showWarningScreen();
     } else {
-      if (this.activeScreen instanceof OrientationScreen) {
+      if (this.activeScreen instanceof WarningScreen) {
         this.showIntroScreen();
       }
     }

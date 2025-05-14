@@ -202,6 +202,26 @@ canvas {
     border-radius: 15px;
   }
 
+  #btnRight {
+    width: 86px;
+    height: 86px;
+  }
+
+  #btnLeft {
+    width: 90px;
+    height: 90px;
+  }
+
+  #btnJump {
+    width: 90px;
+    height: 90px;
+  }
+
+  #btnThrow {
+    width: 90px;
+    height: 90px;
+  }
+
   #muteButton {
     top: 10px;
     left: 48%;
