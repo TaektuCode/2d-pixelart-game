@@ -229,14 +229,15 @@ class StartScreen {
   }
 
   /**
-   * Handles click/touch events.
+   * Calculates the scaled click coordinates based on the event.
    * @param {MouseEvent|TouchEvent} event - The event object.
+   * @returns {object} - An object containing the scaled clickX and clickY.
    */
-  handleClick(event) {
-    let clickX, clickY;
+  getScaledClickCoordinates(event) {
     const rect = this.canvas.getBoundingClientRect();
     const scaleX = this.canvas.width / rect.width;
     const scaleY = this.canvas.height / rect.height;
+    let clickX, clickY;
 
     if (event.type === "touchstart") {
       clickX = (event.touches[0].clientX - rect.left) * scaleX;
@@ -246,6 +247,18 @@ class StartScreen {
       clickX = (event.clientX - rect.left) * scaleX;
       clickY = (event.clientY - rect.top) * scaleY;
     }
+    return { x: clickX, y: clickY };
+  }
+
+  /**
+   * Handles click or touch events on the start screen.
+   * @param {MouseEvent|TouchEvent} event - The mouse or touch event object.
+   */
+  handleClick(event) {
+    const scaledClick = this.getScaledClickCoordinates(event);
+    const clickX = scaledClick.x;
+    const clickY = scaledClick.y;
+
     if (this.isPointInside(clickX, clickY, this.controlsButtonLogic)) {
       this.removeEventListeners();
       AudioHub.stopStartScreenMusic();
