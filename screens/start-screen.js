@@ -246,39 +246,6 @@ class StartScreen {
       clickX = (event.clientX - rect.left) * scaleX;
       clickY = (event.clientY - rect.top) * scaleY;
     }
-
-    console.log("Scaled Click X:", clickX, "Scaled Click Y:", clickY);
-    console.log(
-      "Controls Button (Logic) - X:",
-      this.controlsButtonLogic.x,
-      "Y:",
-      this.controlsButtonLogic.y,
-      "Width:",
-      this.controlsButtonLogic.width,
-      "Height:",
-      this.controlsButtonLogic.height,
-    );
-    console.log(
-      "Start Button (Logic) - X:",
-      this.startButtonLogic.x,
-      "Y:",
-      this.startButtonLogic.y,
-      "Width:",
-      this.startButtonLogic.width,
-      "Height:",
-      this.startButtonLogic.height,
-    );
-    console.log(
-      "Imprint Button (Logic) - X:",
-      this.imprintButtonLogic.x,
-      "Y:",
-      this.imprintButtonLogic.y,
-      "Width:",
-      this.imprintButtonLogic.width,
-      "Height:",
-      this.imprintButtonLogic.height,
-    );
-
     if (this.isPointInside(clickX, clickY, this.controlsButtonLogic)) {
       this.removeEventListeners();
       AudioHub.stopStartScreenMusic();
