@@ -38,19 +38,14 @@ function init() {
  * Handles resizing of the canvas and updates the active screen if necessary.
  */
 function resizeCanvas() {
-  if (gameBox && canvas) {
-    canvas.width = gameBox.offsetWidth;
-    canvas.height = gameBox.offsetHeight;
-
-    if (
-      screenManager &&
-      screenManager.activeScreen &&
-      typeof screenManager.activeScreen.handleResize === "function"
-    ) {
-      screenManager.activeScreen.handleResize();
-    } else if (screenManager && screenManager.activeScreen) {
-      screenManager.activeScreen.draw();
-    }
+  if (
+    screenManager &&
+    screenManager.activeScreen &&
+    typeof screenManager.activeScreen.handleResize === "function"
+  ) {
+    screenManager.activeScreen.handleResize();
+  } else if (screenManager && screenManager.activeScreen) {
+    screenManager.activeScreen.draw();
   }
 }
 
