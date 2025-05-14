@@ -266,12 +266,15 @@ class World {
   /**
    * Checks if the conditions are met to activate the end boss fight sequence.
    */
+  /**
+   * Checks if the conditions are met to activate the end boss fight sequence.
+   */
   checkEndbossActivation() {
     if (this.isEndbossPresentAndReady()) {
       this.activateEndbossSequence();
+      this.level.endboss[0].activate();
     }
   }
-
   /**
    * Checks if the end boss exists in the level and if the character has reached a specific
    * position to trigger its appearance and initial behavior.

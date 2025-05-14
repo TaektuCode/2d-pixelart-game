@@ -75,6 +75,16 @@ class Endboss extends GameObject {
    */
   lastStepSoundTime = 0;
   /**
+   * Interval ID for Attackanimation.
+   * @type {number|null}
+   */
+  attackInterval = null;
+  /**
+   * Gibt an, ob der Endboss gerade angreift.
+   * @type {boolean}
+   */
+  isAttacking = false;
+  /**
    * Array of image paths for the walking animation (flipped).
    * @type {string[]}
    */
@@ -132,6 +142,12 @@ class Endboss extends GameObject {
   };
 
   /**
+   * Indicates if the endboss is currently activated and should perform attacks.
+   * @type {boolean}
+   */
+  isActivated = false;
+
+  /**
    * Creates a new Endboss instance.
    */
   constructor() {
@@ -146,6 +162,30 @@ class Endboss extends GameObject {
     this.speed = 0.45;
     this.animate();
     this.isMovingLeft = false;
+  }
+
+  /**
+   * Sets the activation state of the endboss and starts the attack interval.
+   */
+  activate() {
+    this.isActivated = true;
+    // Starte den Angriffs-Timer, wenn der Boss aktiviert ist
+    setInterval(() => {
+      if (
+        this.isActivated &&
+        !this.isDead &&
+        !this.isHitState &&
+        !this.isAttacking
+      ) {
+        this.isMovingLeft = false; // Bewegung stoppen
+        this.isAttacking = true; // Setze das Angriffs-Flag
+        this.playAttackAnimation(() => {
+          // Callback-Funktion, die ausgeführt wird, nachdem die Attackenanimation abgeschlossen ist
+          this.isAttacking = false; // Reset des Angriffs-Flags
+          this.isMovingLeft = true; // Bewegung wieder starten
+        });
+      }
+    }, 2000); // Alle 2000 Millisekunden (2 Sekunden)
   }
 
   /**
@@ -210,6 +250,11 @@ class Endboss extends GameObject {
     AudioHub.playOneSound(AudioHub.ENDBOSS_HURT);
     this.isMovingLeft = false;
     this.lastHitTime = Date.now();
+    if (this.isAttacking) {
+      clearInterval(this.attackInterval);
+      this.isAttacking = false;
+      this.resetHitbox();
+    }
     if (this.hp <= 0 && !this.isDead) {
       this.die();
     }
@@ -218,12 +263,35 @@ class Endboss extends GameObject {
   /**
    * Initiates the death sequence of the endboss.
    */
+  /**
+   * Initiates the death sequence of the endboss.
+   */
   die() {
     this.isDead = true;
     AudioHub.playOneSound(AudioHub.ENDBOSS_DEATH);
     this.isMovingLeft = false;
     this.isHitState = false;
+    if (this.isAttacking) {
+      clearInterval(this.attackInterval);
+      this.isAttacking = false;
+      this.resetHitbox();
+    }
     this.animateDeath();
+  }
+
+  /**
+   * Applies the attack hitbox by decreasing the left offset.
+   */
+  applyAttackHitbox() {
+    this.originalOffsetLeft = this.offset.left;
+    this.offset.left -= 100;
+  }
+
+  /**
+   * Resets the hitbox to its original state.
+   */
+  resetHitbox() {
+    this.offset.left = this.originalOffsetLeft;
   }
 
   /**
@@ -232,19 +300,26 @@ class Endboss extends GameObject {
    * @param {Function} [callback] - An optional function to execute after the attack animation.
    */
   playAttackAnimation(callback) {
+    clearInterval(this.attackInterval);
     let i = 0;
-    const attackInterval = setInterval(() => {
+
+    this.applyAttackHitbox();
+    this.playAnimation(this.IMAGES_ATTACK);
+    i++;
+    AudioHub.playOneSound(AudioHub.ENDBOSS_ACTIVATION);
+
+    this.attackInterval = setInterval(() => {
       this.playAnimation(this.IMAGES_ATTACK);
       i++;
       if (i >= this.IMAGES_ATTACK.length) {
-        clearInterval(attackInterval);
+        clearInterval(this.attackInterval);
+        this.resetHitbox();
         if (callback) {
           callback();
         }
       }
     }, 200);
   }
-
   /**
    * Marks the endboss to be removed from the game world.
    */
