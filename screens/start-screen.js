@@ -39,40 +39,43 @@ class StartScreen {
   backgroundImageLoaded;
 
   /**
-   * Definition of the "Control" button.
+   * Definition of the "Control" button (visual).
    * @type {object}
-   * @property {string} label - The text label of the button.
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
    */
-  startButton;
+  startButtonVisual;
 
   /**
-   * Definition of the "Start Game" button.
+   * Definition of the "Control" button (logic).
    * @type {object}
-   * @property {string} label - The text label of the button.
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
    */
-  controlsButton;
+  startButtonLogic;
 
   /**
-   * Definition of the "Imprint" button.
+   * Definition of the "Start Game" button (visual).
    * @type {object}
-   * @property {string} label - The text label of the button.
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
    */
-  imprintButton;
+  controlsButtonVisual;
 
   /**
-   * The bound `handleClick` method to maintain the `this` context.
+   * Definition of the "Start Game" button (logic).
+   * @type {object}
+   */
+  controlsButtonLogic;
+
+  /**
+   * Definition of the "Imprint" button (visual).
+   * @type {object}
+   */
+  imprintButtonVisual;
+
+  /**
+   * Definition of the "Imprint" button (logic).
+   * @type {object}
+   */
+  imprintButtonLogic;
+
+  /**
+   * The bound `handleClick` method.
    * @private
    * @type {Function}
    */
@@ -80,9 +83,9 @@ class StartScreen {
 
   /**
    * Creates a new StartScreen instance.
-   * @param {HTMLCanvasElement} canvas - The canvas element on which the screen is rendered.
-   * @param {Function} startGameCallback - Callback function that is called when the game should be started.
-   * @param {Function} showControlsCallback - Callback function that is called to show the controls screen.
+   * @param {HTMLCanvasElement} canvas - The canvas element.
+   * @param {Function} startGameCallback - Callback to start the game.
+   * @param {Function} showControlsCallback - Callback to show controls.
    */
   constructor(canvas, startGameCallback, showControlsCallback) {
     this.canvas = canvas;
@@ -92,29 +95,33 @@ class StartScreen {
     this.backgroundImage = new Image();
     this.backgroundImage.src = "assets/img/ui/menu_bg.png";
     this.backgroundImageLoaded = false;
-    this.startButton = {
-      // Top
+
+    this.startButtonVisual = {
       label: "Control",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2 - 75,
       width: 200,
       height: 50,
     };
-    this.controlsButton = {
-      // Bottom
+    this.controlsButtonVisual = {
       label: "Start Game",
       x: canvas.width / 2 - 110,
       y: canvas.height / 2,
       width: 200,
       height: 50,
     };
-    this.imprintButton = {
+    this.imprintButtonVisual = {
       label: "Imprint",
       x: 25,
       y: 75,
       width: 80,
       height: 30,
     };
+
+    this.startButtonLogic = { ...this.startButtonVisual };
+    this.controlsButtonLogic = { ...this.controlsButtonVisual };
+    this.imprintButtonLogic = { ...this.imprintButtonVisual };
+
     this.setBindings();
     this.addEventListeners();
     this.backgroundImage.onload = () => {
@@ -125,25 +132,37 @@ class StartScreen {
   }
 
   /**
-   * Adjusts the positions of the buttons when the screen is resized.
+   * Adjusts button positions on resize.
    */
   handleResize() {
-    this.startButton.x = this.canvas.width / 2 - 110;
-    this.startButton.y = this.canvas.height / 2 - 100;
-    this.controlsButton.x = this.canvas.width / 2 - 110;
-    this.controlsButton.y = this.canvas.height / 2;
-    (this.imprintButton.x = 25), (this.imprintButton.y = 25), this.draw();
+    this.startButtonVisual.x = this.canvas.width / 2 - 110;
+    this.startButtonVisual.y = this.canvas.height / 2 - 100;
+    this.controlsButtonVisual.x = this.canvas.width / 2 - 110;
+    this.controlsButtonVisual.y = this.canvas.height / 2;
+    this.imprintButtonVisual.x = 25;
+    this.imprintButtonVisual.y = 25;
+    this.updateLogicPositions();
+    this.draw();
   }
 
   /**
-   * Binds the `handleClick` method to the current instance to ensure the `this` context is correct.
+   * Updates the logical button positions based on visual positions.
+   */
+  updateLogicPositions() {
+    this.startButtonLogic = { ...this.startButtonVisual };
+    this.controlsButtonLogic = { ...this.controlsButtonVisual };
+    this.imprintButtonLogic = { ...this.imprintButtonVisual };
+  }
+
+  /**
+   * Binds the handleClick method.
    */
   setBindings() {
     this.boundHandleClick = this.handleClick.bind(this);
   }
 
   /**
-   * Adds event listeners for 'click' and 'touchstart' events to the canvas for handling user interaction.
+   * Adds event listeners.
    */
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
@@ -151,7 +170,7 @@ class StartScreen {
   }
 
   /**
-   * Removes the 'click' and 'touchstart' event listeners from the canvas.
+   * Removes event listeners.
    */
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
@@ -159,7 +178,7 @@ class StartScreen {
   }
 
   /**
-   * Clears the canvas and adds event listeners before drawing the start screen.
+   * Shows the start screen.
    */
   show() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -168,7 +187,7 @@ class StartScreen {
   }
 
   /**
-   * Clears the canvas and draws the background image and buttons for the start screen.
+   * Draws the start screen.
    */
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -182,27 +201,23 @@ class StartScreen {
         this.canvas.height,
       );
     }
-    this.drawButton(this.startButton);
-    this.drawButton(this.controlsButton);
-    this.drawButton(this.imprintButton);
+    this.drawButton(this.startButtonVisual);
+    this.drawButton(this.controlsButtonVisual);
+    this.drawButton(this.imprintButtonVisual);
   }
 
   /**
-   * Draws a single button on the canvas with a background and text.
-   * @param {object} button - The button object with label, x, y, width, and height properties.
+   * Draws a button.
+   * @param {object} button - The button object.
    */
   drawButton(button) {
     this.ctx.lineWidth = 2;
-
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     this.ctx.fillRect(button.x, button.y, button.width, button.height);
-
-    if (button === this.imprintButton) {
-      this.ctx.font = "bold 14px sans-serif";
-    } else {
-      this.ctx.font = "24px sans-serif";
-    }
-
+    this.ctx.font =
+      button === this.imprintButtonVisual
+        ? "bold 14px sans-serif"
+        : "24px sans-serif";
     this.ctx.fillStyle = "white";
     this.ctx.textAlign = "center";
     this.ctx.textBaseline = "middle";
@@ -214,42 +229,74 @@ class StartScreen {
   }
 
   /**
-   * Handles click or touch events on the start screen. It checks if the click/touch coordinates
-   * are within the bounds of the "Start Game", "Control", or "Imprint" buttons and performs the
-   * corresponding action.
-   * @param {MouseEvent|TouchEvent} event - The mouse or touch event object.
+   * Handles click/touch events.
+   * @param {MouseEvent|TouchEvent} event - The event object.
    */
   handleClick(event) {
     let clickX, clickY;
     const rect = this.canvas.getBoundingClientRect();
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
 
     if (event.type === "touchstart") {
-      clickX = event.touches[0].clientX - rect.left;
-      clickY = event.touches[0].clientY - rect.top + 50;
+      clickX = (event.touches[0].clientX - rect.left) * scaleX;
+      clickY = (event.touches[0].clientY - rect.top) * scaleY;
       event.preventDefault();
     } else {
-      clickX = event.clientX - rect.left;
-      clickY = event.clientY - rect.top;
+      clickX = (event.clientX - rect.left) * scaleX;
+      clickY = (event.clientY - rect.top) * scaleY;
     }
 
-    if (this.isPointInside(clickX, clickY, this.controlsButton)) {
+    console.log("Scaled Click X:", clickX, "Scaled Click Y:", clickY);
+    console.log(
+      "Controls Button (Logic) - X:",
+      this.controlsButtonLogic.x,
+      "Y:",
+      this.controlsButtonLogic.y,
+      "Width:",
+      this.controlsButtonLogic.width,
+      "Height:",
+      this.controlsButtonLogic.height,
+    );
+    console.log(
+      "Start Button (Logic) - X:",
+      this.startButtonLogic.x,
+      "Y:",
+      this.startButtonLogic.y,
+      "Width:",
+      this.startButtonLogic.width,
+      "Height:",
+      this.startButtonLogic.height,
+    );
+    console.log(
+      "Imprint Button (Logic) - X:",
+      this.imprintButtonLogic.x,
+      "Y:",
+      this.imprintButtonLogic.y,
+      "Width:",
+      this.imprintButtonLogic.width,
+      "Height:",
+      this.imprintButtonLogic.height,
+    );
+
+    if (this.isPointInside(clickX, clickY, this.controlsButtonLogic)) {
       this.removeEventListeners();
       AudioHub.stopStartScreenMusic();
       this.startGameCallback();
-    } else if (this.isPointInside(clickX, clickY, this.startButton)) {
+    } else if (this.isPointInside(clickX, clickY, this.startButtonLogic)) {
       this.removeEventListeners();
       this.showControlsCallback();
-    } else if (this.isPointInside(clickX, clickY, this.imprintButton)) {
+    } else if (this.isPointInside(clickX, clickY, this.imprintButtonLogic)) {
       window.location.href = "imprint.html";
     }
   }
 
   /**
-   * Checks if a given point (x, y) is inside a rectangle (button).
+   * Checks if a point is inside a rectangle.
    * @param {number} x - The x-coordinate of the point.
    * @param {number} y - The y-coordinate of the point.
-   * @param {object} rect - The rectangle object with x, y, width, and height properties.
-   * @returns {boolean} True if the point is inside the rectangle, false otherwise.
+   * @param {object} rect - The rectangle object.
+   * @returns {boolean} - True if the point is inside, false otherwise.
    */
   isPointInside(x, y, rect) {
     return (

@@ -78,6 +78,7 @@ canvas {
   height: 35px;
 }
 
+/* MOBILE */
 @media only screen and (max-width: 720px) {
   #gameBox {
     width: 100% !important;
@@ -156,6 +157,65 @@ canvas {
   }
 }
 
+/*TABLET */
+
+@media only screen and (max-width: 1367px) {
+  #gameBox {
+    height: 100vh !important;
+    width: 100% !important;
+  }
+  canvas {
+    height: 100vh !important;
+    width: 100% !important;
+  }
+
+  #gameTitle {
+    display: none;
+  }
+
+  #touchControls {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 15px;
+    left: 35px;
+    z-index: 10;
+  }
+
+  #panel1 {
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    border-radius: 15px;
+  }
+
+  #panel2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+  }
+
+  #muteButton {
+    top: 10px;
+    left: 48%;
+    z-index: 10;
+    width: 15px;
+    height: 15px;
+  }
+
+  #muteIcon {
+    z-index: 10;
+    width: 25px;
+    height: 25px;
+  }
+}
 .imprint {
   font-family: serif;
   height: 100vh;
