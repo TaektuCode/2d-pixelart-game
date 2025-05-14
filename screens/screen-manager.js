@@ -120,7 +120,7 @@ class ScreenManager {
     this.winScreen = new WinScreen(
       canvas,
       this.startGame.bind(this),
-      this.closeGame,
+      this.showStartScreen.bind(this),
     );
     this.activeScreen = this.introScreen;
     this.drawCurrentScreen();

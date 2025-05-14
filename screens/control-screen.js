@@ -3,19 +3,19 @@
  */
 class ControlScreen {
   /**
-   * The canvas element on which the screen is rendered.
+   * The canvas element.
    * @type {HTMLCanvasElement}
    */
   canvas;
 
   /**
-   * The 2D rendering context of the canvas.
+   * The 2D rendering context.
    * @type {CanvasRenderingContext2D}
    */
   ctx;
 
   /**
-   * Callback function that is called to return to the start screen.
+   * Callback to return to the start screen.
    * @type {Function}
    */
   showStartScreenCallback;
@@ -27,13 +27,13 @@ class ControlScreen {
   startGameCallback;
 
   /**
-   * The background image for the control screen.
+   * The background image.
    * @type {HTMLImageElement}
    */
   backgroundImage;
 
   /**
-   * A flag indicating whether the background image has loaded.
+   * Flag indicating if the background image is loaded.
    * @type {boolean}
    */
   backgroundImageLoaded;
@@ -41,27 +41,17 @@ class ControlScreen {
   /**
    * Definition of the "Back" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} label - The label of the button.
    */
   backButton;
 
   /**
    * Definition of the "Start Game" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} label - The label of the button.
    */
   startGameButton;
 
   /**
-   * The bound `handleClick` method to maintain the `this` context.
+   * Bound `handleClick` method.
    * @private
    * @type {Function}
    */
@@ -69,17 +59,17 @@ class ControlScreen {
 
   /**
    * Creates a new ControlScreen instance.
-   * @param {HTMLCanvasElement} canvas - The canvas element on which the screen is rendered.
-   * @param {Function} showStartScreenCallback - Callback function that is called to return to the start screen.
+   * @param {HTMLCanvasElement} canvas - The canvas element.
+   * @param {Function} showStartScreenCallback - Callback to return to start.
    * @param {Function} startGameCallback - Callback to start the game.
    */
   constructor(canvas, showStartScreenCallback, startGameCallback) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
     this.showStartScreenCallback = showStartScreenCallback;
-    this.startGameCallback = startGameCallback; // Store the startGameCallback
+    this.startGameCallback = startGameCallback;
     this.backgroundImage = new Image();
-    this.backgroundImage.src = "assets/img/ui/menu_bg.png"; // Path to the background image
+    this.backgroundImage.src = "assets/img/ui/menu_bg.png";
     this.backgroundImageLoaded = false;
     this.backButton = { x: 0, y: 0, width: 0, height: 0, label: "Back" };
     this.startGameButton = {
@@ -100,29 +90,29 @@ class ControlScreen {
   }
 
   /**
-   * Redraws the screen when the window is resized to adjust button positions and text.
+   * Adjusts button positions on resize.
    */
   handleResize() {
-    this.draw(); // Redraw on resize to adjust button positions and text
+    this.draw();
   }
 
   /**
-   * Binds the `handleClick` method to the current instance to ensure `this` is referenced correctly.
+   * Binds the handleClick method.
    */
   setBindings() {
     this.boundHandleClick = this.handleClick.bind(this);
   }
 
   /**
-   * Adds event listeners for clicks and touch inputs to the canvas.
+   * Adds event listeners.
    */
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
-    this.canvas.addEventListener("touchstart", this.boundHandleClick); // For touch input
+    this.canvas.addEventListener("touchstart", this.boundHandleClick);
   }
 
   /**
-   * Removes the event listeners for clicks and touch inputs from the canvas.
+   * Removes event listeners.
    */
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
@@ -130,7 +120,7 @@ class ControlScreen {
   }
 
   /**
-   * Shows the control screen by restoring the event listeners and drawing the screen.
+   * Shows the control screen.
    */
   show() {
     this.removeEventListeners();
@@ -139,7 +129,7 @@ class ControlScreen {
   }
 
   /**
-   * Draws the control screen on the canvas. This includes the background image, buttons, and control text.
+   * Draws the control screen.
    */
   draw() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -151,32 +141,7 @@ class ControlScreen {
         this.canvas.width,
         this.canvas.height,
       );
-      const buttonWidth = 200;
-      const buttonHeight = 50;
-      const buttonSpacing = 20;
-
-      // Calculate the starting position for the buttons to center them horizontally
-      const totalButtonWidth = 2 * buttonWidth + buttonSpacing;
-      const startX = (this.canvas.width - totalButtonWidth) / 2;
-      const buttonY = this.canvas.height - buttonHeight - 75;
-
-      this.backButton = {
-        label: "Back",
-        x: startX,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
-      this.startGameButton = {
-        label: "Start Game",
-        x: startX + buttonWidth + buttonSpacing,
-        y: buttonY,
-        width: buttonWidth,
-        height: buttonHeight,
-      };
-      this.drawButton(this.backButton);
-      this.drawButton(this.startGameButton);
-      this.drawControlsText();
+      this.drawButtonsAndText();
     } else {
       this.ctx.fillStyle = "black";
       this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -192,8 +157,38 @@ class ControlScreen {
   }
 
   /**
-   * Draws a single button on the canvas.
-   * @param {object} button - The button object with its properties (x, y, width, height, label).
+   * Draws buttons and control text.
+   */
+  drawButtonsAndText() {
+    const buttonWidth = 200;
+    const buttonHeight = 50;
+    const buttonSpacing = 20;
+    const startX = (this.canvas.width - (2 * buttonWidth + buttonSpacing)) / 2;
+    const buttonY = this.canvas.height - buttonHeight - 75;
+
+    this.backButton = {
+      label: "Back",
+      x: startX,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+    };
+    this.startGameButton = {
+      label: "Start Game",
+      x: startX + buttonWidth + buttonSpacing,
+      y: buttonY,
+      width: buttonWidth,
+      height: buttonHeight,
+    };
+
+    this.drawButton(this.backButton);
+    this.drawButton(this.startGameButton);
+    this.drawControlsText();
+  }
+
+  /**
+   * Draws a single button.
+   * @param {object} button - The button object.
    */
   drawButton(button) {
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -209,13 +204,12 @@ class ControlScreen {
   }
 
   /**
-   * Draws the text explaining the game controls on the canvas.
+   * Draws the control text.
    */
   drawControlsText() {
     this.ctx.fillStyle = "white";
     this.ctx.font = "20px sans-serif";
     this.ctx.textAlign = "center";
-
     const textLines = [
       "Use the following keys to control the game:",
       "",
@@ -224,11 +218,9 @@ class ControlScreen {
       "Spacebar: Jump",
       "D: Attack",
     ];
-
     const startX = this.canvas.width / 2;
     let startY = this.canvas.height / 2 - (textLines.length * 30) / 2 - 50;
     const lineHeight = 30;
-
     textLines.forEach((line) => {
       this.ctx.fillText(line, startX, startY);
       startY += lineHeight;
@@ -236,20 +228,35 @@ class ControlScreen {
   }
 
   /**
-   * Handles click and touch events on the canvas. Checks if the click is within a button and performs the corresponding action.
-   * @param {MouseEvent|TouchEvent} event - The triggered mouse or touch event.
+   * Calculates the scaled click coordinates.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   * @returns {object} - Scaled click coordinates (x, y).
    */
-  handleClick(event) {
+  getScaledClickCoordinates(event) {
     const rect = this.canvas.getBoundingClientRect();
-    let clickX = event.clientX - rect.left; // Use let
-    let clickY = event.clientY - rect.top; // Use let
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    let clickX, clickY;
 
     if (event.type === "touchstart") {
-      const touch = event.changedTouches[0];
-      clickX = touch.clientX - rect.left;
-      clickY = touch.clientY - rect.top + 75;
+      clickX = (event.touches[0].clientX - rect.left) * scaleX;
+      clickY = (event.touches[0].clientY - rect.top) * scaleY;
       event.preventDefault();
+    } else {
+      clickX = (event.clientX - rect.left) * scaleX;
+      clickY = (event.clientY - rect.top) * scaleY;
     }
+    return { x: clickX, y: clickY };
+  }
+
+  /**
+   * Handles click and touch events.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   */
+  handleClick(event) {
+    const scaledClick = this.getScaledClickCoordinates(event);
+    const clickX = scaledClick.x;
+    const clickY = scaledClick.y;
 
     if (this.isPointInside(clickX, clickY, this.backButton)) {
       this.removeEventListeners();
@@ -262,11 +269,11 @@ class ControlScreen {
   }
 
   /**
-   * Checks if a given point is inside a rectangle.
+   * Checks if a point is inside a rectangle.
    * @param {number} x - The x-coordinate of the point.
    * @param {number} y - The y-coordinate of the point.
-   * @param {object} rect - The rectangle object with properties x, y, width, and height.
-   * @returns {boolean} True if the point is inside the rectangle, false otherwise.
+   * @param {object} rect - The rectangle object.
+   * @returns {boolean} - True if the point is inside, false otherwise.
    */
   isPointInside(x, y, rect) {
     return (

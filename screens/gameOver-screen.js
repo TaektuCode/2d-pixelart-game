@@ -3,25 +3,25 @@
  */
 class GameOverScreen {
   /**
-   * The canvas element on which the game over screen is rendered.
+   * The canvas element.
    * @type {HTMLCanvasElement}
    */
   canvas;
 
   /**
-   * The 2D rendering context of the canvas.
+   * The 2D rendering context.
    * @type {CanvasRenderingContext2D}
    */
   ctx;
 
   /**
-   * Callback function to restart the game.
+   * Callback to restart the game.
    * @type {Function}
    */
   restartCallback;
 
   /**
-   * Callback function to return to the main menu.
+   * Callback to return to the main menu.
    * @type {Function}
    */
   menuCallback;
@@ -39,13 +39,13 @@ class GameOverScreen {
   height;
 
   /**
-   * The background image for the game over screen.
+   * The background image.
    * @type {HTMLImageElement}
    */
   backgroundImage;
 
   /**
-   * A flag indicating whether the background image has loaded.
+   * Flag indicating if the background image is loaded.
    * @type {boolean}
    */
   backgroundImageLoaded;
@@ -53,27 +53,17 @@ class GameOverScreen {
   /**
    * Definition of the "Restart Game" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} text - The text label of the button.
    */
   restartButton;
 
   /**
    * Definition of the "Back to Menu" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} text - The text label of the button.
    */
   menuButton;
 
   /**
-   * The bound `handleClick` method to maintain the `this` context.
+   * Bound `handleClick` method.
    * @private
    * @type {Function}
    */
@@ -81,9 +71,9 @@ class GameOverScreen {
 
   /**
    * Creates a new GameOverScreen instance.
-   * @param {HTMLCanvasElement} canvas - The canvas element on which the game over screen will be rendered.
-   * @param {Function} restartCallback - Callback function to be executed when the restart button is clicked.
-   * @param {Function} menuCallback - Callback function to be executed when the back to menu button is clicked.
+   * @param {HTMLCanvasElement} canvas - The canvas element.
+   * @param {Function} restartCallback - Callback to restart the game.
+   * @param {Function} menuCallback - Callback to return to the menu.
    */
   constructor(canvas, restartCallback, menuCallback) {
     this.canvas = canvas;
@@ -119,62 +109,74 @@ class GameOverScreen {
   }
 
   /**
-   * Binds the `handleClick` method to the current instance to ensure the `this` context is correct.
+   * Binds the handleClick method.
    */
   setBindings() {
     this.boundHandleClick = this.handleClick.bind(this);
   }
 
   /**
-   * Adds event listeners for 'click' and 'touchstart' events to the canvas for handling user interaction.
+   * Adds event listeners.
    */
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
-    this.canvas.addEventListener("touchstart", this.boundHandleClick); // For touch input
+    this.canvas.addEventListener("touchstart", this.boundHandleClick);
   }
 
   /**
-   * Removes the 'click' and 'touchstart' event listeners from the canvas.
+   * Removes event listeners.
    */
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
-    this.canvas.removeEventListener("touchstart", this.boundHandleClick); // Also remove touch listener
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick);
   }
 
   /**
-   * Handles click or touch events on the game over screen. It checks if the click/touch
-   * coordinates are within the bounds of the restart or menu buttons and executes the
-   * corresponding callback function.
-   * @param {MouseEvent|TouchEvent} event - The mouse or touch event object.
+   * Calculates the scaled click coordinates.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   * @returns {object} - Scaled click coordinates (x, y).
    */
-  handleClick(event) {
+  getScaledClickCoordinates(event) {
     const rect = this.canvas.getBoundingClientRect();
-    let x, y;
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    let clickX, clickY;
 
     if (event.type === "touchstart") {
-      x = event.touches[0].clientX - rect.left;
-      y = event.touches[0].clientY - rect.top + 50;
+      clickX = (event.touches[0].clientX - rect.left) * scaleX;
+      clickY = (event.touches[0].clientY - rect.top) * scaleY;
       event.preventDefault();
     } else {
-      x = event.clientX - rect.left;
-      y = event.clientY - rect.top;
+      clickX = (event.clientX - rect.left) * scaleX;
+      clickY = (event.clientY - rect.top) * scaleY;
     }
+    return { x: clickX, y: clickY };
+  }
 
-    if (this.isPointInside(x, y, this.restartButton)) {
+  /**
+   * Handles click or touch events.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   */
+  handleClick(event) {
+    const scaledClick = this.getScaledClickCoordinates(event);
+    const clickX = scaledClick.x;
+    const clickY = scaledClick.y;
+
+    if (this.isPointInside(clickX, clickY, this.restartButton)) {
       this.removeEventListeners();
       this.restartCallback();
-    } else if (this.isPointInside(x, y, this.menuButton)) {
+    } else if (this.isPointInside(clickX, clickY, this.menuButton)) {
       this.removeEventListeners();
       this.menuCallback();
     }
   }
 
   /**
-   * Checks if a given point (x, y) is inside a button object.
+   * Checks if a point is inside a rectangle.
    * @param {number} x - The x-coordinate of the point.
    * @param {number} y - The y-coordinate of the point.
-   * @param {object} button - The button object with x, y, width, and height properties.
-   * @returns {boolean} True if the point is inside the button, false otherwise.
+   * @param {object} button - The rectangle object.
+   * @returns {boolean} - True if the point is inside, false otherwise.
    */
   isPointInside(x, y, button) {
     return (
@@ -186,7 +188,7 @@ class GameOverScreen {
   }
 
   /**
-   * Clears the canvas and draws the game over screen elements, including the background, text, and buttons.
+   * Clears the canvas and draws the game over screen.
    */
   draw() {
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -195,12 +197,11 @@ class GameOverScreen {
       this.ctx.drawImage(this.backgroundImage, 0, 0, this.width, this.height);
     }
     this.drawText();
-
     this.drawButtons();
   }
 
   /**
-   * Draws the "Game Over" text in the center of the screen.
+   * Draws the "Game Over" text.
    */
   drawText() {
     this.ctx.font = "bold 64px OldLondon";
@@ -211,7 +212,7 @@ class GameOverScreen {
   }
 
   /**
-   * Draws the restart and menu buttons on the screen.
+   * Draws the restart and menu buttons.
    */
   drawButtons() {
     this.drawButton(this.restartButton);
@@ -219,8 +220,8 @@ class GameOverScreen {
   }
 
   /**
-   * Draws a single button on the canvas with a background and text.
-   * @param {object} button - The button object with x, y, width, height, and text properties.
+   * Draws a single button.
+   * @param {object} button - The button object.
    */
   drawButton(button) {
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -237,7 +238,7 @@ class GameOverScreen {
   }
 
   /**
-   * Makes the game over screen visible and active by adding event listeners and drawing it.
+   * Makes the game over screen visible.
    */
   show() {
     this.addEventListeners();
@@ -245,7 +246,7 @@ class GameOverScreen {
   }
 
   /**
-   * Hides the game over screen by removing its event listeners.
+   * Hides the game over screen.
    */
   hide() {
     this.removeEventListeners();

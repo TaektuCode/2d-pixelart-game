@@ -3,25 +3,25 @@
  */
 class WinScreen {
   /**
-   * The HTML canvas element used for rendering the win screen.
+   * The HTML canvas element.
    * @type {HTMLCanvasElement}
    */
   canvas;
 
   /**
-   * The 2D rendering context of the canvas.
+   * The 2D rendering context.
    * @type {CanvasRenderingContext2D}
    */
   ctx;
 
   /**
-   * Callback function to restart the game.
+   * Callback to restart the game.
    * @type {Function}
    */
   playAgainCallback;
 
   /**
-   * Callback function to return to the main menu.
+   * Callback to return to the main menu.
    * @type {Function}
    */
   menuCallback;
@@ -39,13 +39,13 @@ class WinScreen {
   height;
 
   /**
-   * The background image for the win screen.
+   * The background image.
    * @type {HTMLImageElement}
    */
   backgroundImage;
 
   /**
-   * A flag indicating whether the background image has loaded.
+   * Flag indicating if the background image is loaded.
    * @type {boolean}
    */
   backgroundImageLoaded;
@@ -53,27 +53,17 @@ class WinScreen {
   /**
    * Definition of the "Play Again" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} text - The text label of the button.
    */
   playAgainButton;
 
   /**
    * Definition of the "Back to Menu" button.
    * @type {object}
-   * @property {number} x - The x-coordinate of the button.
-   * @property {number} y - The y-coordinate of the button.
-   * @property {number} width - The width of the button.
-   * @property {number} height - The height of the button.
-   * @property {string} text - The text label of the button.
    */
   menuButton;
 
   /**
-   * The bound `handleClick` method to maintain the `this` context.
+   * Bound `handleClick` method.
    * @private
    * @type {Function}
    */
@@ -81,9 +71,9 @@ class WinScreen {
 
   /**
    * Creates a new WinScreen instance.
-   * @param {HTMLCanvasElement} canvas - The canvas element on which the win screen will be rendered.
-   * @param {Function} playAgainCallback - Callback function to be executed when the "Play Again" button is clicked.
-   * @param {Function} menuCallback - Callback function to be executed when the "Back to Menu" button is clicked.
+   * @param {HTMLCanvasElement} canvas - The canvas element.
+   * @param {Function} playAgainCallback - Callback to restart the game.
+   * @param {Function} menuCallback - Callback to return to the menu.
    */
   constructor(canvas, playAgainCallback, menuCallback) {
     this.canvas = canvas;
@@ -119,62 +109,74 @@ class WinScreen {
   }
 
   /**
-   * Binds the `handleClick` method to the current instance to ensure the `this` context is correct.
+   * Binds the handleClick method.
    */
   setBindings() {
     this.boundHandleClick = this.handleClick.bind(this);
   }
 
   /**
-   * Adds event listeners for 'click' and 'touchstart' events to the canvas for handling user interaction.
+   * Adds event listeners.
    */
   addEventListeners() {
     this.canvas.addEventListener("click", this.boundHandleClick);
-    this.canvas.addEventListener("touchstart", this.boundHandleClick); // For touch input
+    this.canvas.addEventListener("touchstart", this.boundHandleClick);
   }
 
   /**
-   * Removes the 'click' and 'touchstart' event listeners from the canvas.
+   * Removes event listeners.
    */
   removeEventListeners() {
     this.canvas.removeEventListener("click", this.boundHandleClick);
-    this.canvas.removeEventListener("touchstart", this.boundHandleClick); // Also remove touch listener
+    this.canvas.removeEventListener("touchstart", this.boundHandleClick);
   }
 
   /**
-   * Handles click or touch events on the win screen. It checks if the click/touch coordinates
-   * are within the bounds of the "Play Again" or "Back to Menu" buttons and executes the
-   * corresponding callback function.
-   * @param {MouseEvent|TouchEvent} event - The mouse or touch event object.
+   * Calculates the scaled click coordinates.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   * @returns {object} - Scaled click coordinates (x, y).
    */
-  handleClick(event) {
+  getScaledClickCoordinates(event) {
     const rect = this.canvas.getBoundingClientRect();
-    let x, y;
+    const scaleX = this.canvas.width / rect.width;
+    const scaleY = this.canvas.height / rect.height;
+    let clickX, clickY;
 
     if (event.type === "touchstart") {
-      x = event.touches[0].clientX - rect.left;
-      y = event.touches[0].clientY - rect.top + 50;
-      event.preventDefault(); // Prevents potential unwanted scrolling/zooming
+      clickX = (event.touches[0].clientX - rect.left) * scaleX;
+      clickY = (event.touches[0].clientY - rect.top) * scaleY;
+      event.preventDefault();
     } else {
-      x = event.clientX - rect.left;
-      y = event.clientY - rect.top;
+      clickX = (event.clientX - rect.left) * scaleX;
+      clickY = (event.clientY - rect.top) * scaleY;
     }
+    return { x: clickX, y: clickY };
+  }
 
-    if (this.isPointInside(x, y, this.playAgainButton)) {
+  /**
+   * Handles click or touch events.
+   * @param {MouseEvent|TouchEvent} event - The event object.
+   */
+  handleClick(event) {
+    const scaledClick = this.getScaledClickCoordinates(event);
+    const clickX = scaledClick.x;
+    const clickY = scaledClick.y;
+
+    if (this.isPointInside(clickX, clickY, this.playAgainButton)) {
       this.removeEventListeners();
       this.playAgainCallback();
-    } else if (this.isPointInside(x, y, this.menuButton)) {
+    } else if (this.isPointInside(clickX, clickY, this.menuButton)) {
       this.removeEventListeners();
       this.menuCallback();
     }
   }
 
   /**
-   * Checks if a given point (x, y) is inside a button object.
+   * Checks if a point is inside a rectangle.
    * @param {number} x - The x-coordinate of the point.
    * @param {number} y - The y-coordinate of the point.
-   * @param {object} button - The button object with x, y, width, and height properties.
-   * @returns {boolean} True if the point is inside the button, false otherwise.
+   * @param {object} button - The rectangle object.
+   * @returns {boolean} - True if the point is inside, false otherwise.
    */
   isPointInside(x, y, button) {
     return (
@@ -186,7 +188,7 @@ class WinScreen {
   }
 
   /**
-   * Clears the canvas and draws the win screen elements, including the background, text, and buttons.
+   * Clears the canvas and draws the win screen.
    */
   draw() {
     this.ctx.clearRect(0, 0, this.width, this.height);
@@ -195,23 +197,22 @@ class WinScreen {
       this.ctx.drawImage(this.backgroundImage, 0, 0, this.width, this.height);
     }
     this.drawText();
-
     this.drawButtons();
   }
 
   /**
-   * Draws the "You Won!" text in the center of the screen.
+   * Draws the "You Won!" text.
    */
   drawText() {
     this.ctx.font = "bold 64px OldLondon";
-    this.ctx.fillStyle = "green"; // Changed color to green for "You Won"
+    this.ctx.fillStyle = "green";
     this.ctx.textAlign = "center";
-    this.ctx.fillText("You Won!", this.width / 2, this.height / 4); // Changed text
+    this.ctx.fillText("You Won!", this.width / 2, this.height / 4);
     this.ctx.shadowBlur = 0;
   }
 
   /**
-   * Draws the "Play Again" and "Back to Menu" buttons on the screen.
+   * Draws the "Play Again" and "Back to Menu" buttons.
    */
   drawButtons() {
     this.drawButton(this.playAgainButton);
@@ -219,8 +220,8 @@ class WinScreen {
   }
 
   /**
-   * Draws a single button on the canvas with a background and text.
-   * @param {object} button - The button object with x, y, width, height, and text properties.
+   * Draws a single button.
+   * @param {object} button - The button object.
    */
   drawButton(button) {
     this.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
@@ -237,7 +238,7 @@ class WinScreen {
   }
 
   /**
-   * Makes the win screen visible and active by adding event listeners and drawing it.
+   * Makes the win screen visible.
    */
   show() {
     this.addEventListeners();
@@ -245,7 +246,7 @@ class WinScreen {
   }
 
   /**
-   * Hides the win screen by removing its event listeners.
+   * Hides the win screen.
    */
   hide() {
     this.removeEventListeners();
