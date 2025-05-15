@@ -13,7 +13,7 @@ class BackgroundObject extends GameObject {
    * The default width of the background object.
    * @type {number}
    */
-  width = 720;
+  width = 721;
   /**
    * The default height of the background object.
    * @type {number}
