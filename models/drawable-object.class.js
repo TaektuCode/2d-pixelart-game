@@ -80,7 +80,7 @@ class DrawableObject {
     if (this.img && this.img.complete) {
       if (this.otherDirection) {
         ctx.save();
-        ctx.translate(this.x + this.width, this.y);
+        ctx.translate(this.x + this.width - 50, this.y);
         ctx.scale(-1, 1);
         ctx.drawImage(this.img, 0, 0, this.width, this.height);
         ctx.restore();
