@@ -130,7 +130,7 @@ class IntroScreen {
 
       this.ctx.font = `bold 24px serif`;
       this.ctx.fillText(
-        "START",
+        "PRESS ON SCREEN",
         this.canvas.width / 2,
         this.canvas.height * 0.8,
       ); // Position relative to the height
